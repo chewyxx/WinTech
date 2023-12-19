@@ -60,7 +60,7 @@ const Signup = () => {
 
   return (
     <div className="form_container">
-      <h2>Signup Account</h2>
+      <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
@@ -92,9 +92,9 @@ const Signup = () => {
             onChange={handleOnChange}
           />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Sign up</button>
         <span>
-          Already have an account? <Link to={"/login"}>Login</Link>
+          Already have an account? <Link to={"/login"}>Log in now</Link>
         </span>
       </form>
       <ToastContainer />

@@ -25,24 +25,26 @@ body {
     90deg,
     rgba(2, 0, 36, 1) 0%,
     rgba(143, 187, 204, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
+    rgba(159, 237, 215, 1) 100%
   );
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: sans-serif;
 }
 
 .form_container {
-  background-color: #fff;
+  background-color: #FBFBFB;
   padding: 2rem 3rem;
-  border-radius: 0.5rem;
+  border-radius: 1.5rem;
   width: 100%;
   max-width: 400px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
 }
 
 .form_container > h2 {
-  margin-block: 1rem;
+  margin-bottom: 0.5rem;
   padding-block: 0.6rem;
-  color: rgba(0, 212, 255, 1);
+  display: flex;
+  justify-content: center;
+  color: #023F76;
 }
 
 .form_container > form {
@@ -57,7 +59,15 @@ body {
   gap: 0.3rem;
 }
 
+.form_container label {
+  color: #026670;
+  font-weight: bold;
+}
+
 .form_container input {
+  background-color: #FBFBFB;
+  color: #026670;
+  opacity: 0.8;
   border: none;
   padding: 0.5rem;
   border-bottom: 1px solid gray;
@@ -68,21 +78,31 @@ body {
 .form_container input::placeholder {
   font-size: 0.9rem;
   font-style: italic;
+  font-weight: bold;
+  color: #026670;
+  opacity: 0.4;
 }
 
 .form_container button {
-  background-color: rgba(0, 212, 255, 1);
-  color: #fff;
+  background-color: #9FEDD7;
+  color: #026670;
+  font-weight: bold;
   border: none;
   padding: 0.6rem;
   font-size: 1rem;
   cursor: pointer;
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
 }
+
+.form_container span {
+  text-decoration: none;
+  color: #026670;
+}
+
 
 span a {
   text-decoration: none;
-  color: rgba(0, 212, 255, 1);
+  color: #023F76;
 }
 
 .home_page {
