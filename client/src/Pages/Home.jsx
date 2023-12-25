@@ -23,6 +23,7 @@ const Home = () => {
       return status
         ? toast(`Hello ${user}`, {
             position: "top-right",
+            toastId: 'stop welcome duplication'
           })
         : (removeCookie("token"), navigate("/login"));
     };
@@ -30,7 +31,7 @@ const Home = () => {
   }, [cookies, navigate, removeCookie]);
   const Logout = () => {
     removeCookie("token");
-    navigate("/signup");
+    navigate("/login");
   };
   return (
     <>
@@ -41,7 +42,7 @@ const Home = () => {
         </h4>
         <button onClick={Logout}>LOGOUT</button>
       </div>
-      <ToastContainer />
+      <ToastContainer/>
     </>
   );
 };
