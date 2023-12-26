@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import NavBar from "../Components/Navbar";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,10 +37,7 @@ const Home = () => {
   return (
     <>
       <div className="home_page">
-        <h4>
-          {" "}
-          Welcome <span>{username}</span>
-        </h4>
+        <NavBar/>
         <button onClick={Logout}>LOGOUT</button>
       </div>
       <ToastContainer/>
