@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -15,13 +14,10 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = ['Popular Destinations', 'My Trips'];
 const settings = ['Profile','Logout'];
 
-function NavBar() {
+export default function NavBar({ user, logout }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -33,6 +29,34 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: '#9FEDD7',
+        color: 'black'
+      },
+      children: `${name.split(' ')[0][0]}`,
+    };
+  }
+
+  const navigationBar = (command) => {
+    if (command === "Popular Destinations") {
+        // navigate to popular destinations page (react router)
+        handleCloseUserMenu();
+    } else if (command === "My Trips") {
+        // navigate to my trips page (react router)
+        handleCloseUserMenu();
+    }
+  }
+  const settingsBar = (command) => {
+    if (command === "Logout") {
+        logout();
+    } else if (command === "Profile") {
+        // navigate to profile page (react router)
+        handleCloseUserMenu();
+    }
+  }
 
   return (
     <AppBar position="static"  style={{ background: '#026670' }}>
@@ -42,7 +66,7 @@ function NavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -57,48 +81,11 @@ function NavBar() {
             BonVoyage
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 0.03, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => navigationBar(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -106,10 +93,17 @@ function NavBar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0.01, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton 
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true" 
+                onClick={handleOpenUserMenu} 
+                sx={{ p: 0 }}
+              >
+                <Avatar {...stringAvatar(user)} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -129,8 +123,10 @@ function NavBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting} onClick={() => settingsBar(setting)}>
+                    <Typography textAlign="center">
+                        {setting}
+                    </Typography> 
                 </MenuItem>
               ))}
             </Menu>
@@ -140,4 +136,3 @@ function NavBar() {
     </AppBar>
   );
 }
-export default NavBar;
