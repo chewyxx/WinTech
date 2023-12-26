@@ -23,22 +23,23 @@ const Home = () => {
       setUsername(user);
       return status
         ? toast(`Hello ${user}`, {
-            position: "top-right",
+            position: "bottom-right",
             toastId: 'stop welcome duplication'
           })
         : (removeCookie("token"), navigate("/login"));
     };
     verifyCookie();
   }, [cookies, navigate, removeCookie]);
+
   const Logout = () => {
     removeCookie("token");
     navigate("/login");
   };
+
   return (
     <>
       <div className="home_page">
-        <NavBar/>
-        <button onClick={Logout}>LOGOUT</button>
+        <NavBar user={username} logout={Logout}/>
       </div>
       <ToastContainer/>
     </>
