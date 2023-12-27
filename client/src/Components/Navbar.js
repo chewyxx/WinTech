@@ -55,6 +55,21 @@ export default function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const profile = () => {
+    setAnchorElUser(null);
+    navigate("/profile");
+  };
+
+  const popularDestinations = () => {
+    setAnchorElNav(null);
+    navigate("/popular-destinations");
+  };
+
+  const myTrips = () => {
+    setAnchorElNav(null);
+    navigate("/my-trips");
+  };
   
   function stringAvatar(name) {
     return {
@@ -68,19 +83,16 @@ export default function NavBar() {
 
   const navigationBar = (command) => {
     if (command === "Popular Destinations") {
-        // navigate to popular destinations page (react router)
-        handleCloseNavMenu();
+        popularDestinations();
     } else if (command === "My Trips") {
-        // navigate to my trips page (react router)
-        handleCloseNavMenu();
+        myTrips();
     }
   }
   const settingsBar = (command) => {
     if (command === "Logout") {
         logout();
     } else if (command === "Profile") {
-        // navigate to profile page (react router)
-        handleCloseUserMenu();
+        profile();
     }
   }
 
