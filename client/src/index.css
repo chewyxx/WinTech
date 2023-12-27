@@ -21,12 +21,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(143, 187, 204, 1) 35%,
-    rgba(159, 237, 215, 1) 100%
-  );
+  background-color: #F5F5F5;
   font-family: sans-serif;
 }
 
