@@ -1,7 +1,5 @@
-import express from 'express';
-import { Itinerary } from './Models/ItineraryModel.js';
-
-const router = express.Router();
+const { Itinerary } = require('../Models/ItineraryModel');
+const router = require("express").Router();
 
 // route to create itinerary
 router.post('/', async (req, res) => {
@@ -112,4 +110,4 @@ router.delete('/:id', async(req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

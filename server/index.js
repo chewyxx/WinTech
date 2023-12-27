@@ -7,9 +7,7 @@ const {MONGO_URL} = process.env;
 const PORT = 4000
 const cookieParser = require("cookie-parser");
 const authRoute = require("./Routes/AuthRoute")
-
-import { Itinerary } from './Models/ItineraryModel.js';
-import ItineraryRoute from './Routes/ItineraryRoute.js'
+const itineraryRoute = require("./Routes/ItineraryRoute.js")
 
 mongoose
   .connect(MONGO_URL, {
@@ -35,4 +33,4 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/", authRoute);
-app.use("/itineraries", ItineraryRoute);
+app.use("/itineraries", itineraryRoute);
