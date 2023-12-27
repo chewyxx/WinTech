@@ -99,10 +99,10 @@ body {
   color: #026670;
 }
 
-
 span a {
   text-decoration: none;
-  color: #023F76;
+  font-weight: bold;
+  color: #48AAAD;
 }
 
 .home_page {
