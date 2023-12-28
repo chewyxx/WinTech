@@ -4,86 +4,79 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from '../Components/Navbar';
 import '../Styles/Profile.css';
+import useFetch from '../Hooks/useFetch';
 
 const Profile = () => {
     const navigate = useNavigate();
 
     const [cookies, removeCookie] = useCookies([]);
-    const [prevName, setPrevName] = useState("");
-    const [name, setName] = useState("");
+    const [id, setId] = useState("");
     const [prevUsername, setPrevUsername] = useState("");
     const [username, setUsername] = useState("");
     const [prevEmail, setPrevEmail] = useState("");
     const [email, setEmail] = useState("");
-    const [prevPassword, setPrevPassword] = useState("");
-    const [password, setPassword] = useState("");
+
+    const { data, loading, error } = useFetch(`http://localhost:4000/api/users`);
 
     useEffect(() => {
         const verifyCookie = async () => {
-            const { data } = await axios.post(
-                "http://localhost:4000",
-                {},
-                { withCredentials: true }
-            );
-            const { status, user } = data;
+            if (!cookies.token) {
+              navigate("/login");
+              return;
+            }
+            
+            try {
+                const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
 
-            setPrevUsername(user);
+                setPrevUsername(res.data.user);
+                setUsername(res.data.user);
 
-            return status
-                ? console.log(`Hello ${user}`)
-                : (removeCookie("token"), navigate("/login"));
+                if (!res.data.status) {
+                  removeCookie("token");
+                  navigate("/login");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                navigate("/login");
+            }
         };
 
-        const getUser = async () => {
-            axios.get('http://localhost:4000/user/', { withCredentials: true }) // idk why i cant connect to the backend
-                .then((res) => {
-                    console.log(res.data);
-
-                    setPrevName(res.data.name);
-                    setName(res.data.name);
-
-                    setPrevUsername(res.data.username);
-                    setUsername(res.data.username);
-
-                    setPrevEmail(res.data.email);
-                    setEmail(res.data.email);
-
-                    setPrevPassword(res.data.password);
-                    setPassword(res.data.password);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+        const getUser = () => {
+            if (data.data) {
+                setId(data.data.find(user => user.username === prevUsername)._id);
+                setPrevEmail(data.data.find(user => user.username === prevUsername).email);
+                setEmail(data.data.find(user => user.username === prevUsername).email);
+            }
         }
-
+          
         verifyCookie();
-        // getUser();
-    }, [username, email, password]);
+        getUser();
+    }, [cookies, data]);
 
-    const handleSave = () => {
-        // save changes to database and ui
+    const handleSave = async () => {
+        try {
+            if (username === "" || email === "") {
+                alert("Please fill out all fields.");
+                return;
+            } else if (username === prevUsername && email === prevEmail) {
+                alert("No changes were made.");
+                return;
+            }
 
-        // axios.put('http://localhost:4000/user/', { username, email, password }, { withCredentials: true })
-        //     .then((res) => {
-        //         console.log(res.data);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     })
+            const res = await axios.put(`http://localhost:4000/api/users/${id}`, { username, email }, { withCredentials: true });
 
-        // doesnt work???
-        setPrevName(name);
-        setPrevUsername(username);
-        setPrevEmail(email);
-        setPrevPassword(password);
+            if (res.data.status) {
+                setPrevUsername(username);
+                setPrevEmail(email);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     const handleCancel = () => {
-        // reset changes in ui
-        setName(prevName);
         setUsername(prevUsername);
         setEmail(prevEmail);
-        setPassword(prevPassword);
     }
 
     const handleChangePassword = () => {
@@ -105,18 +98,13 @@ const Profile = () => {
 
                         <div className="profile_body">
                             <div className="profile_info_container">
-                                <label>Name</label>
-                                <input type="text" placeholder={prevName} value={name} onChange={(e) => setName(e.target.value)} />
-                            </div>
-
-                            <div className="profile_info_container">
                                 <label htmlFor="username">Username</label>
-                                <input type="text" placeholder={prevUsername} value={username} onChange={(e) => setUsername(e.target.value)} />
+                                <input type="text" placeholder={username} value={username} onChange={(e) => setUsername(e.target.value)} />
                             </div>
 
                             <div className="profile_info_container">
                                 <label htmlFor="email">Email</label>
-                                <input type="text" placeholder={prevEmail} value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <input type="text" placeholder={email} value={email} onChange={(e) => setEmail(e.target.value)} />
                             </div>
                         </div>
 
@@ -128,8 +116,7 @@ const Profile = () => {
                     </div>
 
                     <div className="profile_pic_container">
-                        <p>Profile Picture</p>
-                        <p>Edit button</p>
+                        <p>Coming soon: Profile Picture</p>
                     </div>
                 </form>
             </div>

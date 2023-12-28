@@ -26,12 +26,10 @@ export default function NavBar() {
         {},
         { withCredentials: true }
       );
+ 
+      setUsername(data.user);
 
-      const { status, user } = data;
-
-      setUsername(user);
-
-      return status
+      return data.status
         ? null
         : (removeCookie("token"), navigate("/login"));
     };

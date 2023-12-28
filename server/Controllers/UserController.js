@@ -1,11 +1,31 @@
-const { UserModel } = require("../Models/UserModel");
+const User = require("../Models/UserModel");
+
+// create user
+module.exports.createUser = async (req, res) => {
+    const { email, password, username, createdAt } = req.body;
+
+    try {
+        const user = await User.create({ email, password, username, createdAt });
+
+        res.status(200).json({
+            success: true,
+            message: "User is created",
+            data: user,
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "User is not created",
+        });
+    }
+};
 
 // delete user
 module.exports.deleteUser = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const deletedUser = await UserModel.findByIdAndDelete(id);
+        const deletedUser = await User.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,
@@ -25,7 +45,7 @@ module.exports.updateUser = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const updatedUser = await UserModel.findByIdAndUpdate(id, {
+        const updatedUser = await User.findByIdAndUpdate(id, {
             $set: req.body,
         }, { new: true });
 
@@ -47,7 +67,7 @@ module.exports.getUser = async (req, res) => {
     const id = req.params.id;
 
     try {
-        const user = await UserModel.findById(id);
+        const user = await User.findById(id);
 
         res.status(200).json({
             success: true,
@@ -63,9 +83,9 @@ module.exports.getUser = async (req, res) => {
 };
 
 // get all users
-module.exports.getUsers = async (req, res) => {
+module.exports.getUsers = async (req, res, next) => {
     try {
-        const users = await UserModel.find({});
+        const users = await User.find();
 
         res.status(200).json({
             success: true,
@@ -74,9 +94,6 @@ module.exports.getUsers = async (req, res) => {
             count: users.length,
         });
     } catch (err) {
-        res.status(404).json({
-            success: false,
-            message: "All users are not found",
-        });
+        next(err);
     }
 };
