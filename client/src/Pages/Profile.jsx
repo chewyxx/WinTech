@@ -80,7 +80,7 @@ const Profile = () => {
     }
 
     const handleChangePassword = () => {
-        // navigate to change password page?
+        navigate("/change-password");
     }
 
     return (
@@ -109,7 +109,7 @@ const Profile = () => {
                         </div>
 
                         <div className="profile_buttons">
-                            <button type="button" className='profile_password_button'>Change password?</button>
+                            <button type="button" className='profile_password_button' onClick={handleChangePassword}>Change password?</button>
                             <button type="submit" className="profile_save_button">Save Changes</button>
                             <button type="reset" className="profile_cancel_button">Cancel Changes</button>
                         </div>
