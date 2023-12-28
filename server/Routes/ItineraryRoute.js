@@ -1,5 +1,6 @@
-const { Itinerary } = require('../Models/ItineraryModel');
+const Itinerary = require('../Models/ItineraryModel');
 const router = require("express").Router();
+
 
 // route to create itinerary
 router.post('/', async (req, res) => {
@@ -21,11 +22,9 @@ router.post('/', async (req, res) => {
       cities: req.body.cities,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      groupSize: req.body.groupSize ,
-      activities: req.body.activities,
     };
-
-    const itinerary = await Itinerary.create(newItinerary);
+    console.log(newItinerary);
+    const itinerary = await Itinerary.create(newItinerary)
 
     return res.status(201).send(itinerary);
 

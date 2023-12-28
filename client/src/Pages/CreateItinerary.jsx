@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
+import NavBar from "../Components/Navbar";
 
 const CreateItinerary = () => {
+    const [username, setUsername] = useState("");
+    const [cookies, removeCookie] = useCookies([]);
 
     const [title, setTitle] = useState('');
     const [country, setCountry] = useState('');
@@ -23,7 +27,7 @@ const CreateItinerary = () => {
         axios.post('http://localhost:4000/itineraries', data)
             .then(() => {
                 setLoading(false);
-                navigate('/');
+                navigate('/itineraries');
             })
             .catch((error) => {
                 setLoading(false);
@@ -32,10 +36,15 @@ const CreateItinerary = () => {
             })
     };
 
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/login");
+      };
 
     return (
-        <div className="p-4">
-            <h1 className="text-3xl my-4">Create Itinerary</h1>
+        <div className="home_page">
+            <NavBar user={username} logout={Logout}/>
+            <h1 className="text-3xl f-4">Create Itinerary</h1>
             { loading ? <p>loading...</p> : ''}
 
             <div className="flex flex-cool border-2">

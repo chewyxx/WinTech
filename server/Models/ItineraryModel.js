@@ -22,13 +22,7 @@ const itinerarySchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
-        groupSize: {
-            type: Number,
-            default: 1,
-        },
-        activities: {
-            type: [String],
-        },
+
     },
     {
         timestamps: true,
