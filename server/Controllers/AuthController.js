@@ -25,27 +25,86 @@ module.exports.Signup = async (req, res, next) => {
 };
 
 module.exports.Login = async (req, res, next) => {
-    try {
-      const { email, password } = req.body;
-      if(!email || !password ){
-        return res.json({message:'All fields are required'})
-      }
-      const user = await User.findOne({ email });
-      if(!user){
-        return res.json({message:'Incorrect password or email' }) 
-      }
-      const auth = await bcrypt.compare(password,user.password)
-      if (!auth) {
-        return res.json({message:'Incorrect password or email' }) 
-      }
-       const token = createSecretToken(user._id);
-       res.cookie("token", token, {
-         withCredentials: true,
-         httpOnly: false,
-       });
-       res.status(201).json({ message: "User logged in successfully", success: true });
-       next()
-    } catch (error) {
-      console.error(error);
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password ){
+      return res.json({message:'All fields are required'})
     }
-  };
+
+    const user = await User.findOne({ email });
+    if (!user){
+      return res.json({message:'Incorrect password or email' }) 
+    }
+
+    const auth = await bcrypt.compare(password,user.password)
+    if (!auth) {
+      return res.json({message:'Incorrect password or email' }) 
+    }
+
+    const token = createSecretToken(user._id);
+      res.cookie("token", token, {
+      withCredentials: true,
+      httpOnly: false,
+    });
+
+    res.status(201).json({ message: "User logged in successfully", success: true });
+    next()
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports.CheckPassword = async (req, res) => {
+  const id = req.params.id;
+  const { password } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    const auth = await bcrypt.compare(password, user.password);
+    if (!auth) {
+      return res.json({
+        success: false,
+        message: "Password is incorrect" 
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Password is correct",
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+module.exports.UpdatePassword = async (req, res) => {
+  const id = req.params.id;
+  const { password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { password: hashedPassword },
+      },
+      { new: true }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Password is updated",
+      data: updatedUser,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error,
+    });
+  }
+}

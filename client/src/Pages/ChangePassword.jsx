@@ -58,14 +58,10 @@ const ChangePassword = () => {
 
     const handleSave = async () => {
         try {
+            console.log(`id:${id}`);
+
             if (newPassword === "" || confirmPassword == "") {
                 alert("Please fill out all fields.");
-                return;
-            }
-
-            // need to hash new password before checking if same as the old password
-            if (newPassword === prevPassword) {
-                alert("New password cannot be the same as the old password.");
                 return;
             }
 
@@ -73,18 +69,23 @@ const ChangePassword = () => {
                 alert("Passwords do not match.");
                 return;
             }
+
+            const authRes = await axios.get(`http://localhost:4000/password/${id}`);
+            console.log(`authRes:${authRes}`);
+            const auth = await authRes.success;
+            if (!auth) {
+                alert("New password cannot be the same as the old password.");
+                return;
+            }
             
-            {/* need to hash new password first before saving in mongodb */}
+            const res = await axios.put(`http://localhost:4000/password/${id}`, { 
+                password: newPassword
+            }, { withCredentials: true });
+            console.log(`res:${res}`);
 
-            // const res = await axios.put(`http://localhost:4000/api/users/${id}`, { 
-            //     "password": newPassword 
-            // }, { withCredentials: true });
-
-            // if (res.data.status) {
-            //     setPrevPassword(newPassword);
-            // }
-
-            navigate("/profile");
+            if (res.success) {
+                alert("Password successfully changed.");
+            }
         } catch (error) {
             console.error('Error:', error);
         }

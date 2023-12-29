@@ -80,8 +80,7 @@ const Profile = () => {
     }
 
     const handleCancel = () => {
-        setUsername(prevUsername);
-        setEmail(prevEmail);
+        navigate("/");
     }
 
     const handleChangePassword = () => {
