@@ -35,15 +35,20 @@ const ChangePassword = () => {
                   navigate("/login");
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('verifyCookiy error:', error);
                 navigate("/login");
             }
         };
 
         const getUser = () => {
-            if (data.data) {
-                setId(data.data.find(user => user.username === username)._id);
-                setPrevPassword(data.data.find(user => user.username === username).password);
+            try {
+                if (data.data) {
+                    setId(data.data.find(user => user.username === username)._id);
+                    setPrevPassword(data.data.find(user => user.username === username).password);
+                }
+                console.log("getUser is successful");
+            } catch (error) {
+                console.error('getUser error:', error);
             }
         }
           
@@ -58,6 +63,7 @@ const ChangePassword = () => {
                 return;
             }
 
+            // need to hash new password before checking if same as the old password
             if (newPassword === prevPassword) {
                 alert("New password cannot be the same as the old password.");
                 return;
@@ -68,7 +74,7 @@ const ChangePassword = () => {
                 return;
             }
             
-            {/* changes password in database to exactly what is in newPassword without the token */}
+            {/* need to hash new password first before saving in mongodb */}
 
             // const res = await axios.put(`http://localhost:4000/api/users/${id}`, { 
             //     "password": newPassword 

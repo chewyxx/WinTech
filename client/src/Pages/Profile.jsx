@@ -36,16 +36,21 @@ const Profile = () => {
                   navigate("/login");
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('verifyCookie error:', error);
                 navigate("/login");
             }
         };
 
         const getUser = () => {
-            if (data.data) {
-                setId(data.data.find(user => user.username === prevUsername)._id);
-                setPrevEmail(data.data.find(user => user.username === prevUsername).email);
-                setEmail(data.data.find(user => user.username === prevUsername).email);
+            try {
+                if (data.data) {
+                    setId(data.data.find(user => user.username === prevUsername)._id);
+                    setPrevEmail(data.data.find(user => user.username === prevUsername).email);
+                    setEmail(data.data.find(user => user.username === prevUsername).email);
+                }
+                console.log("getUser is successful");
+            } catch (error) {
+                console.error('getUser error:', error);
             }
         }
           
