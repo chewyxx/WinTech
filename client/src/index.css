@@ -32,9 +32,9 @@ body {
 
 .form_container {
   background-color: #FBFBFB;
-  padding: 2rem 3rem;
+  padding: 2rem 3.5rem;
   border-radius: 1.5rem;
-  width: 100%;
+  width: 105%;
   max-width: 400px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
 }
@@ -99,10 +99,10 @@ body {
   color: #026670;
 }
 
-
 span a {
   text-decoration: none;
-  color: #023F76;
+  font-weight: bold;
+  color: #48AAAD;
 }
 
 .home_page {
