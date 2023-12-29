@@ -80,7 +80,7 @@ const Profile = () => {
     }
 
     const handleCancel = () => {
-        navigate("/");
+        navigate("/home");
     }
 
     const handleChangePassword = () => {
