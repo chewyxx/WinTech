@@ -114,10 +114,6 @@ const Profile = () => {
                             <button type="reset" className="profile_cancel_button">Cancel Changes</button>
                         </div>
                     </div>
-
-                    <div className="profile_pic_container">
-                        <p>Coming soon: Profile Picture</p>
-                    </div>
                 </form>
             </div>
         </>
