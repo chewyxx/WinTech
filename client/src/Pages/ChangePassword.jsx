@@ -56,7 +56,8 @@ const ChangePassword = () => {
         getUser();
     }, [cookies, data]);
 
-    const handleSave = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault();
         try {
             console.log(`id:${id}`);
 
@@ -70,11 +71,12 @@ const ChangePassword = () => {
                 return;
             }
 
-            const authRes = await axios.get(`http://localhost:4000/password/${id}`);
-            console.log(`authRes:${authRes}`);
-            const auth = await authRes.success;
-            if (!auth) {
+            const authRes = await axios.get(`http://localhost:4000/password/${id}`, { params: {password: newPassword}}, {withCredentials: true});
+            console.log(`authRes:${authRes.data}`);
+            const auth = authRes.data;
+            if (!auth.success) {
                 alert("New password cannot be the same as the old password.");
+                window.location.reload();
                 return;
             }
             
@@ -83,12 +85,14 @@ const ChangePassword = () => {
             }, { withCredentials: true });
             console.log(`res:${res}`);
 
-            if (res.success) {
+            if (res.data.success) {
                 alert("Password successfully changed.");
             }
         } catch (error) {
             console.error('Error:', error);
         }
+
+        e.target.reset();
     }
 
     const handleCancel = () => {

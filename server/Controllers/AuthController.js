@@ -57,26 +57,27 @@ module.exports.Login = async (req, res, next) => {
 
 module.exports.CheckPassword = async (req, res) => {
   const id = req.params.id;
-  const { password } = req.body;
+  const password = req.query.password;
 
   try {
     const user = await User.findById(id);
     const auth = await bcrypt.compare(password, user.password);
-    if (!auth) {
+
+    if (auth) {
       return res.json({
         success: false,
-        message: "Password is incorrect" 
+        message: "Password is the same" 
       });
     }
 
     res.status(201).json({
       success: true,
-      message: "Password is correct",
+      message: "Password does not match"
     });
   } catch (error) {
     res.status(404).json({
       success: false,
-      message: error,
+      message: error
     });
   }
 };
@@ -84,7 +85,7 @@ module.exports.CheckPassword = async (req, res) => {
 module.exports.UpdatePassword = async (req, res) => {
   const id = req.params.id;
   const { password } = req.body;
-
+  console.log(password);
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
 
