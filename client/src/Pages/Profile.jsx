@@ -5,6 +5,7 @@ import axios from "axios";
 import NavBar from '../Components/Navbar';
 import '../Styles/Profile.css';
 import useFetch from '../Hooks/useFetch';
+import { ToastContainer, toast } from "react-toastify";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Profile = () => {
     const [prevEmail, setPrevEmail] = useState("");
     const [email, setEmail] = useState("");
 
-    const { data, loading, error } = useFetch(`http://localhost:4000/api/users`);
+    const { data } = useFetch(`http://localhost:4000/api/users`);
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -48,7 +49,6 @@ const Profile = () => {
                     setPrevEmail(data.data.find(user => user.username === prevUsername).email);
                     setEmail(data.data.find(user => user.username === prevUsername).email);
                 }
-                console.log("getUser is successful");
             } catch (error) {
                 console.error('getUser error:', error);
             }
@@ -56,27 +56,33 @@ const Profile = () => {
           
         verifyCookie();
         getUser();
-    }, [cookies, data]);
+    }, [navigate, cookies, removeCookie, prevUsername, data]);
 
-    const handleSave = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault();
+
         try {
             if (username === "" || email === "") {
-                alert("Please fill out all fields.");
+                handleError("Please fill out all fields");
                 return;
             } else if (username === prevUsername && email === prevEmail) {
-                alert("No changes were made.");
+                handleError("No changes were made");
                 return;
             }
 
             const res = await axios.put(`http://localhost:4000/api/users/${id}`, { username, email }, { withCredentials: true });
 
             if (res.data.status) {
+                handleSuccess("Profile updated successfully");
                 setPrevUsername(username);
                 setPrevEmail(email);
+                return;
             }
         } catch (error) {
             console.error('Error:', error);
         }
+
+        e.target.reset();
     }
 
     const handleCancel = () => {
@@ -87,12 +93,25 @@ const Profile = () => {
         navigate("/change-password");
     }
 
+    const handleError = (err) => {
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    }
+
+    const handleSuccess = (msg) => {
+        toast.success(msg, {
+            position: "bottom-left",
+            autoClose: 5000,
+        });
+    }
+
     return (
         <>
             <div className="profile_page">
                 <NavBar/>
 
-                <form className="profile" onSubmit={handleSave} onReset={handleCancel}>
+                <form onSubmit={handleSave} onReset={handleCancel}>
                     
                     <div className="profile_content_container">
                         <div className="profile_header">
@@ -119,6 +138,8 @@ const Profile = () => {
                         </div>
                     </div>
                 </form>
+
+                <ToastContainer className="toast_container" />
             </div>
         </>
     )

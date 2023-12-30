@@ -5,6 +5,7 @@ import axios from "axios";
 import NavBar from '../Components/Navbar';
 import '../Styles/ChangePassword.css';
 import useFetch from '../Hooks/useFetch';
+import { ToastContainer, toast } from "react-toastify";
 
 const ChangePassword = () => {
     const navigate = useNavigate();
@@ -12,11 +13,10 @@ const ChangePassword = () => {
     const [cookies, removeCookie] = useCookies([]);
     const [id, setId] = useState("");
     const [username, setUsername] = useState("");
-    const [prevPassword, setPrevPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const { data, loading, error } = useFetch(`http://localhost:4000/api/users`);
+    const { data } = useFetch(`http://localhost:4000/api/users`);
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -44,9 +44,7 @@ const ChangePassword = () => {
             try {
                 if (data.data) {
                     setId(data.data.find(user => user.username === username)._id);
-                    setPrevPassword(data.data.find(user => user.username === username).password);
                 }
-                console.log("getUser is successful");
             } catch (error) {
                 console.error('getUser error:', error);
             }
@@ -54,20 +52,19 @@ const ChangePassword = () => {
           
         verifyCookie();
         getUser();
-    }, [cookies, data]);
+    }, [navigate, cookies, removeCookie, username, data]);
 
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            console.log(`id:${id}`);
 
-            if (newPassword === "" || confirmPassword == "") {
-                alert("Please fill out all fields.");
+            if (newPassword === "" || confirmPassword === "") {
+                handleError("Please fill out all fields");
                 return;
             }
 
             if (confirmPassword !== newPassword) {
-                alert("Passwords do not match.");
+                handleError("Passwords do not match");
                 return;
             }
 
@@ -75,8 +72,9 @@ const ChangePassword = () => {
             console.log(`authRes:${authRes.data}`);
             const auth = authRes.data;
             if (!auth.success) {
-                alert("New password cannot be the same as the old password.");
-                window.location.reload();
+                handleError("New password cannot be the same as the old password");
+                setNewPassword("");
+                setConfirmPassword("");
                 return;
             }
             
@@ -86,7 +84,10 @@ const ChangePassword = () => {
             console.log(`res:${res}`);
 
             if (res.data.success) {
-                alert("Password successfully changed.");
+                handleSuccess("Password successfully changed");
+                setNewPassword("");
+                setConfirmPassword("");
+                return;
             }
         } catch (error) {
             console.error('Error:', error);
@@ -97,6 +98,19 @@ const ChangePassword = () => {
 
     const handleCancel = () => {
         navigate("/profile");
+    }
+
+    const handleError = (err) => {
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    }
+
+    const handleSuccess = (msg) => {
+        toast.success(msg, {
+            position: "bottom-left",
+            autoClose: 5000
+        });
     }
 
     return (
@@ -128,6 +142,8 @@ const ChangePassword = () => {
                     </div>
                 </form>
             </div>
+
+            <ToastContainer className="toast_container"/>
         </>
     )
 }
