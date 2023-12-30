@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
 
-const ItinerariesPage = () => {
+const MyTrips = () => {
     const [username, setUsername] = useState("");
     const [cookies, removeCookie] = useCookies([]);
 
@@ -77,4 +77,4 @@ const ItinerariesPage = () => {
     )
 }
 
-export default ItinerariesPage;
+export default MyTrips;

@@ -42,7 +42,7 @@ const Signup = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 1000);
       } else {
         handleError(message);
@@ -94,7 +94,10 @@ const Signup = () => {
         </div>
         <button type="submit">Sign up</button>
         <span>
-          Already have an account? <Link to={"/login"}>Log in now</Link>
+          Already have an account? <Link to={"/login"}>Log in</Link>
+        </span>
+        <span>
+          Return to <Link to={"/"}> Landing Page</Link>
         </span>
       </form>
       <ToastContainer />
