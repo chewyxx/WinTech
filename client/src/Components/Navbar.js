@@ -1,22 +1,46 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import { useState, useEffect } from 'react';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 const pages = ['Popular Destinations', 'My Trips'];
 const settings = ['Profile','Logout'];
 
-export default function NavBar({ user, logout }) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+export default function NavBar() {
+  const navigate = useNavigate();
+
+  const [cookies, removeCookie] = useCookies([]);
+  const [username, setUsername] = useState("");
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+  useEffect(() => {
+    const verifyCookie = async () => {
+      if (!cookies.token) {
+        navigate("/login");
+      }
+      
+      const { data } = await axios.post(
+        "http://localhost:4000",
+        {},
+        { withCredentials: true }
+      );
+ 
+      setUsername(data.user);
+
+      return data.status
+        ? null
+        : (removeCookie("token"), navigate("/login"));
+    };
+    
+    verifyCookie();
+  }, [cookies, navigate, removeCookie]);
+
+  function logout() {
+    removeCookie("token");
+    navigate("/login");
+  }
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -24,6 +48,21 @@ export default function NavBar({ user, logout }) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const profile = () => {
+    setAnchorElUser(null);
+    navigate("/profile");
+  };
+
+  const popularDestinations = () => {
+    setAnchorElNav(null);
+    navigate("/popular-destinations");
+  };
+
+  const myTrips = () => {
+    setAnchorElNav(null);
+    navigate("/my-trips");
   };
   
   function stringAvatar(name) {
@@ -38,19 +77,16 @@ export default function NavBar({ user, logout }) {
 
   const navigationBar = (command) => {
     if (command === "Popular Destinations") {
-        // navigate to popular destinations page (react router)
-        handleCloseUserMenu();
+        popularDestinations();
     } else if (command === "My Trips") {
-        // navigate to my trips page (react router)
-        handleCloseUserMenu();
+        myTrips();
     }
   }
   const settingsBar = (command) => {
     if (command === "Logout") {
         logout();
     } else if (command === "Profile") {
-        // navigate to profile page (react router)
-        handleCloseUserMenu();
+        profile();
     }
   }
 
@@ -99,7 +135,7 @@ export default function NavBar({ user, logout }) {
                 onClick={handleOpenUserMenu} 
                 sx={{ p: 0 }}
               >
-                <Avatar {...stringAvatar(user)} />
+                <Avatar {...stringAvatar(username)} />
               </IconButton>
             </Tooltip>
             <Menu
