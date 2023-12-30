@@ -36,8 +36,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/", authRoute);
-app.use("/itineraries", itineraryRoute);
 app.use("/api/users", userRoute);
+app.use("/itineraries", itineraryRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const itinerarySchema = new mongoose.Schema(
     {
-        itineraryId: {
+        userId: {
             type: mongoose.Types.ObjectId,
             ref: "User",
         },
