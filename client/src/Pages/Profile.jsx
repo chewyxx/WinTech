@@ -72,7 +72,7 @@ const Profile = () => {
 
             const res = await axios.put(`http://localhost:4000/api/users/${id}`, { username, email }, { withCredentials: true });
 
-            if (res.data.status) {
+            if (res.data.success) {
                 handleSuccess("Profile updated successfully");
                 setPrevUsername(username);
                 setPrevEmail(email);

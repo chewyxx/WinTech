@@ -35,7 +35,7 @@ const ChangePassword = () => {
                   navigate("/login");
                 }
             } catch (error) {
-                console.error('verifyCookiy error:', error);
+                console.error('verifyCookie error:', error);
                 navigate("/login");
             }
         };
