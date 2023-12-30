@@ -5,11 +5,6 @@
   flex-direction: column;
   gap: 1rem;
   color: #000000;
-  background: linear-gradient(
-    90deg,
-    rgba(143, 187, 204, 1) 35%,
-    rgba(159, 237, 215, 1) 100%
-  );
 }
   
 .profile_page span {
