@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
+import useFetch from '../Hooks/useFetch';
 
 const CreateItinerary = () => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [cookies, removeCookie] = useCookies([]);
+    const [userId, setUserId] = useState("");
+    const [username, setUsername] = useState("");
 
     const [title, setTitle] = useState('');
     const [country, setCountry] = useState('');
@@ -15,6 +18,44 @@ const CreateItinerary = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const { data } = useFetch(`http://localhost:4000/api/users`);
+
+    useEffect(() => {
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+              navigate("/login");
+              return;
+            }
+            
+            try {
+                const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
+
+                setEmail(res.data.email);
+                setUsername(res.data.user);
+
+                if (!res.data.status) {
+                  removeCookie("token");
+                  navigate("/login");
+                }
+            } catch (error) {
+                console.error('verifyCookie error:', error);
+                navigate("/login");
+            }
+        };
+
+        const getUser = () => {
+            try {
+                if (data.data) {
+                    setUserId(data.data.find(user => user.email === email)._id);
+                }
+            } catch (error) {
+                console.error('getUser error:', error);
+            }
+        }
+          
+        verifyCookie();
+        getUser();
+    }, [navigate, cookies, removeCookie, email, data]);
 
     const handleSaveItinerary = () => {
         const data = {
@@ -24,7 +65,7 @@ const CreateItinerary = () => {
             endDate,
         };
         setLoading(true);
-        axios.post('http://localhost:4000/itineraries', data)
+        axios.post(`http://localhost:4000/itineraries/${userId}`, data)
             .then(() => {
                 setLoading(false);
                 navigate('/itineraries');

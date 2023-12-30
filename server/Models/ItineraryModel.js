@@ -17,6 +17,7 @@ const itinerarySchema = new mongoose.Schema(
         },
         cities: {
             type: [String],
+            default: [" "],
         },
         startDate: {
             type: Date,

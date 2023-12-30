@@ -5,18 +5,75 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
+import useFetch from '../Hooks/useFetch';
 
 const MyTrips = () => {
+    const [email, setEmail] = useState("");
+    const [userId, setUserId] = useState("");
     const [username, setUsername] = useState("");
     const [cookies, removeCookie] = useCookies([]);
 
     const [itineraries, setItineraries] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+    const { data } = useFetch(`http://localhost:4000/api/users`);
 
     useEffect(() => {
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+              navigate("/login");
+              return;
+            }
+            
+            try {
+                const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
+
+                setEmail(res.data.email);
+                setUsername(res.data.user);
+
+                if (!res.data.status) {
+                  removeCookie("token");
+                  navigate("/login");
+                }
+            } catch (error) {
+                console.error('verifyCookie error:', error);
+                navigate("/login");
+            }
+        };
+
+        const getUser = () => {
+            try {
+                if (data.data) {
+                    setUserId(data.data.find(user => user.email === email)._id);
+                }
+            } catch (error) {
+                console.error('getUser error:', error);
+            }
+        }
+          
+        verifyCookie();
+        getUser();
+            
+        if (loading) {
+            axios.get(`http://localhost:4000/itineraries/${userId}`)
+                .then((response) => {
+                    setItineraries(response.data.data);
+                    setLoading(false);
+                    console.log("works");
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setLoading(true);
+                });
+        }
+
+    }, [navigate, cookies, removeCookie, email, data]);
+
+    /*useEffect(() => {
         setLoading(true);
         axios
-            .get('http://localhost:4000/itineraries')
+            .get(`http://localhost:4000/itineraries/${userId}`)
             .then((response) => {
                 setItineraries(response.data.data);
                 setLoading(false);
@@ -26,8 +83,7 @@ const MyTrips = () => {
                 setLoading(false);
             });
     }, []);
-
-    const navigate = useNavigate();
+    */
 
     const Logout = () => {
         removeCookie("token");
@@ -47,7 +103,7 @@ const MyTrips = () => {
             </div>
             
             { loading ? (
-                <p>loading...</p>
+                <h1>loading...</h1>
                 ) : (
                     <table>
                         <thead>
@@ -61,7 +117,7 @@ const MyTrips = () => {
                         </thead>
                         <tbody>
                             {itineraries.map((itinerary, index) => (
-                                <tr key={(itinerary._id)}>
+                                <tr key={itinerary.id}>
                                     <td>{index + 1}</td>
                                     <td>{itinerary.title}</td>
                                     <td>{itinerary.country}</td>

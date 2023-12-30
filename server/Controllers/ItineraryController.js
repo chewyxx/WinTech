@@ -112,10 +112,9 @@ module.exports.getItinerary = async (req, res) => {
 // get all itineraries
 module.exports.getItineraries = async (req, res, next) => {
     const userId = req.params.userId;
-
+    
     try {
         const itineraries = await Itinerary.find({ userId: userId });
-
         res.status(200).json({
             success: true,
             message: "Itineraries are found",
