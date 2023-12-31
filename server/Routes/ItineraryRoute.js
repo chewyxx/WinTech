@@ -1,6 +1,4 @@
-const { get } = require('mongoose');
 const { createItinerary, deleteItinerary, updateItinerary, getItinerary, getItineraries } = require('../Controllers/ItineraryController');
-const Itinerary = require('../Models/ItineraryModel');
 const router = require("express").Router();
 
 // create itinerary

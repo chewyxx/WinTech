@@ -8,6 +8,7 @@ const PORT = 4000
 const cookieParser = require("cookie-parser");
 const authRoute = require("./Routes/AuthRoute")
 const itineraryRoute = require("./Routes/ItineraryRoute.js")
+const activityRoute = require("./Routes/ActivityRoute.js")
 const userRoute = require("./Routes/UserRoute");
 const e = require("express");
 
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use("/", authRoute);
 app.use("/api/users", userRoute);
 app.use("/itineraries", itineraryRoute);
+app.use("/activities", activityRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
