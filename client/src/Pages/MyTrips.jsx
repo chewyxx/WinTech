@@ -38,11 +38,11 @@ const MyTrips = () => {
             }
         };
 
-        const getUser = () => {
-            if (userId === "") {
+        const getUser = async () => {
+            if (userId === "" && email != "") {
                 try {
                     if (data.data) {
-                        setUserId(data.data.find(user => user.email === email)._id);
+                        setUserId(await data.data.find(user => user.email === email)._id);
                     }
                 } catch (error) {
                     console.error('getUser error:', error);

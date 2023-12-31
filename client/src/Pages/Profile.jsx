@@ -43,14 +43,16 @@ const Profile = () => {
         };
 
         const getUser = () => {
-            try {
-                if (data.data) {
-                    setId(data.data.find(user => user.username === prevUsername)._id);
-                    setPrevEmail(data.data.find(user => user.username === prevUsername).email);
-                    setEmail(data.data.find(user => user.username === prevUsername).email);
+            if (prevUsername != "") {
+                try {
+                    if (data.data) {
+                        setId(data.data.find(user => user.username === prevUsername)._id);
+                        setPrevEmail(data.data.find(user => user.username === prevUsername).email);
+                        setEmail(data.data.find(user => user.username === prevUsername).email);
+                    }
+                } catch (error) {
+                    console.error('getUser error:', error);
                 }
-            } catch (error) {
-                console.error('getUser error:', error);
             }
         }
           
