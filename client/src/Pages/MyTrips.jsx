@@ -39,7 +39,7 @@ const MyTrips = () => {
         };
 
         const getUser = async () => {
-            if (userId === "" && email != "") {
+            if (userId === "" && email !== "") {
                 try {
                     if (data.data) {
                         setUserId(await data.data.find(user => user.email === email)._id);
@@ -52,40 +52,12 @@ const MyTrips = () => {
           
         verifyCookie();
         getUser();
-            
-        /*if (loading) {
-            axios.get(`http://localhost:4000/itineraries/${userId}`)
-                .then((response) => {
-                    setItineraries(response.data.data);
-                    setLoading(false);
-                    console.log("works");
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setLoading(true);
-                });
-        }*/
 
     }, [navigate, cookies, removeCookie, email, data, loading, userId]);
 
-    /*useEffect(() => {
-        setLoading(true);
-        axios
-            .get(`http://localhost:4000/itineraries/${userId}`)
-            .then((response) => {
-                setItineraries(response.data.data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setLoading(false);
-            });
-    }, []);
-    */
-
-    const handleItinerarys = async () => {
-        if (loading && userId != "") {
-            const res = await axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true })
+    /*const handleItinerarys = async () => {
+        if (loading && userId !== "") {
+            await axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true })
                 .then((response) => {
                     setItineraries(response.data.data);
                     setLoading(false);
@@ -96,10 +68,21 @@ const MyTrips = () => {
                     console.log("error");
                 });
         }
-    }
+    }*/
     useEffect(() => {
-        handleItinerarys();
-    }, [userId, navigate, itineraries]);
+        if (loading && userId !== "") {
+            axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true })
+                .then((response) => {
+                    setItineraries(response.data.data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setLoading(true);
+                    console.log("error");
+                });
+        }
+    }, [userId, navigate, itineraries, loading]);
 
     return (
         <div className="home_page">

@@ -43,7 +43,7 @@ const Profile = () => {
         };
 
         const getUser = () => {
-            if (prevUsername != "") {
+            if (prevUsername !== "") {
                 try {
                     if (data.data) {
                         setId(data.data.find(user => user.username === prevUsername)._id);
