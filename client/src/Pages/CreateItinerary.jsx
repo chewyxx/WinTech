@@ -65,6 +65,13 @@ const CreateItinerary = () => {
             endDate,
         };
         setLoading(true);
+
+        if (startDate > endDate) {
+            alert('Start date cannot be after end date');
+            setLoading(false);
+            return;
+        }
+
         axios.post(`http://localhost:4000/itineraries/${userId}`, data)
             .then(() => {
                 setLoading(false);

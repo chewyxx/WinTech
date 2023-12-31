@@ -1,5 +1,3 @@
-// my trips
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -10,7 +8,6 @@ import useFetch from '../Hooks/useFetch';
 const MyTrips = () => {
     const [email, setEmail] = useState("");
     const [userId, setUserId] = useState("");
-    const [username, setUsername] = useState("");
     const [cookies, removeCookie] = useCookies([]);
 
     const [itineraries, setItineraries] = useState([]);
@@ -30,7 +27,6 @@ const MyTrips = () => {
                 const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
 
                 setEmail(res.data.email);
-                setUsername(res.data.user);
 
                 if (!res.data.status) {
                   removeCookie("token");
@@ -68,7 +64,7 @@ const MyTrips = () => {
                 });
         }
 
-    }, [navigate, cookies, removeCookie, email, data]);
+    }, [navigate, cookies, removeCookie, email, data, loading, userId]);
 
     /*useEffect(() => {
         setLoading(true);
@@ -85,15 +81,10 @@ const MyTrips = () => {
     }, []);
     */
 
-    const Logout = () => {
-        removeCookie("token");
-        navigate("/login");
-      };
-
     return (
         <div className="home_page">
             <div>
-        <NavBar user={username} logout={Logout}/>
+        <NavBar/>
             </div>
             <div className="p-4">
                 <h3>My Trips</h3>
@@ -117,7 +108,7 @@ const MyTrips = () => {
                         </thead>
                         <tbody>
                             {itineraries.map((itinerary, index) => (
-                                <tr key={itinerary.id}>
+                                <tr key={itinerary._id}>
                                     <td>{index + 1}</td>
                                     <td>{itinerary.title}</td>
                                     <td>{itinerary.country}</td>
