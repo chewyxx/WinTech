@@ -51,16 +51,15 @@
 .create_itinerary_form {
   display: flex;
   justify-content: center;
-  align-items: center;
   font-size: 3rem;
   gap: 1rem;
   flex-direction: column;
+  margin-left: 4rem;
 }
 
 .field_info_container {
-  width: 100%;
+  width: 80%;
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
@@ -77,11 +76,11 @@
   gap: 1rem;
   border: none;
   border-radius: 0.5rem;
-  background-color: #e7d4c9;
+  background-color: #C9E0E7;
 }
 
 .field_info_container label {
-  width: 20vw;
+  width: 10vw;
   justify-content: center;
   align-items: center;
   gap: 1rem;

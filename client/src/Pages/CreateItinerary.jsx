@@ -6,20 +6,44 @@ import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
 import '../Styles/CreateItinerary.css';
 import { ToastContainer, toast } from "react-toastify";
+import MultipleSelectChip from "../Components/MultipleSelectChip";
 
 const CreateItinerary = () => {
+    const fixedInterests = [
+        "Shopping",
+        "Eating",
+        "Sightseeing",
+        "Outdoor Activities",
+        "Indoor Activities",
+        "Museums",
+        "Animals",
+    ];
+
+    const fixedDemographics = [
+        "Family",
+        "Friends",
+        "Couples",
+        "Solo",
+        "Disabled",
+        "Elderly",
+    ];
+
     const [email, setEmail] = useState("");
     const [cookies, removeCookie] = useCookies([]);
     const [userId, setUserId] = useState("");
 
     const [title, setTitle] = useState('');
     const [country, setCountry] = useState('');
+    const [cities, setCities] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [groupSize, setGroupSize] = useState(1);
+    const [interests, setInterests] = useState([]);
+    const [demographics, setDemographics] = useState([]);
 
     const navigate = useNavigate();
     const { data } = useFetch(`http://localhost:4000/api/users`);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -76,21 +100,31 @@ const CreateItinerary = () => {
         const data = {
             title,
             country,
+            cities,
             startDate,
             endDate,
+            groupSize,
+            interests,
+            demographics,
         };
         setLoading(true);
 
         try {
             if (title === "" || country === "" || startDate === "" || endDate === "") {
-                handleError('Please fill out all required fields (Title, Country, Start Date, End Date)');
                 setLoading(false);
+                handleError('Please fill out all required fields (Title, Country, Start Date, End Date)');
+                return;
+            }
+
+            if (groupSize < 1 || groupSize > 20) {
+                setLoading(false);
+                handleError('Group size must be between 1 and 20');
                 return;
             }
 
             if (startDate > endDate) {
-                handleError('Start date cannot be after end date');
                 setLoading(false);
+                handleError('Start date cannot be after end date');
                 return;
             }
 
@@ -140,6 +174,11 @@ const CreateItinerary = () => {
                         </div>
 
                         <div className="field_info_container">
+                            <label htmlFor="cities">Cities</label>
+                            <input type="text" placeholder={"Enter cities (Taipei, Tainan, Taidong)"} value={cities} onChange={(e) => setCities(e.target.value.split(',').map((city) => city.trim()))} />
+                        </div>
+
+                        <div className="field_info_container">
                             <label htmlFor="startDate">Start Date</label>
                             <input type="text" placeholder={"Enter start date (YYYY-MM-DD)"} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                         </div>
@@ -147,6 +186,21 @@ const CreateItinerary = () => {
                         <div className="field_info_container">
                             <label htmlFor="endDate">End Date</label>
                             <input type="text" placeholder={"Enter end date (YYYY-MM-DD)"} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="groupSize">Group Size</label>
+                            <input type="number" min={1} max={20} value={groupSize} onChange={(e) => setGroupSize(e.target.value)} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="interests">Interests</label>
+                            <MultipleSelectChip options={fixedInterests} label="Select interests" onChange={(newInterests) => setInterests(newInterests)}/>
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="demographics">Demographics</label>
+                            <MultipleSelectChip options={fixedDemographics} label="Select demographics" onChange={(newDemographics) => setDemographics(newDemographics)}/>
                         </div>
 
                         <div className="create_itinerary_buttons">
