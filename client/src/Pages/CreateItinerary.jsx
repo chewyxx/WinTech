@@ -7,6 +7,9 @@ import useFetch from '../Hooks/useFetch';
 import '../Styles/CreateItinerary.css';
 import { ToastContainer, toast } from "react-toastify";
 import MultipleSelectChip from "../Components/MultipleSelectChip";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const CreateItinerary = () => {
     const fixedInterests = [
@@ -179,13 +182,23 @@ const CreateItinerary = () => {
                         </div>
 
                         <div className="field_info_container">
-                            <label htmlFor="startDate">Start Date</label>
-                            <input type="text" placeholder={"Enter start date (YYYY-MM-DD)"} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                        </div>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <label htmlFor="dates">Dates</label>
 
-                        <div className="field_info_container">
-                            <label htmlFor="endDate">End Date</label>
-                            <input type="text" placeholder={"Enter end date (YYYY-MM-DD)"} value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                                <DatePicker 
+                                    label="Start Date"
+                                    value={startDate} 
+                                    onChange={(newDate) => setStartDate(newDate)}
+                                    sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
+                                />
+
+                                <DatePicker 
+                                    label="End Date" 
+                                    value={endDate} 
+                                    onChange={(newDate) => setEndDate(newDate)} 
+                                    sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
+                                />
+                            </LocalizationProvider>
                         </div>
 
                         <div className="field_info_container">
