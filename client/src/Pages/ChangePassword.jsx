@@ -41,7 +41,7 @@ const ChangePassword = () => {
         };
 
         const getUser = () => {
-            if (username != "") {
+            if (username !== "") {
                 try {
                     if (data.data) {
                         setId(data.data.find(user => user.username === username)._id);

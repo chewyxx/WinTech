@@ -44,12 +44,14 @@ const CreateItinerary = () => {
         };
 
         const getUser = () => {
-            try {
-                if (data.data) {
-                    setUserId(data.data.find(user => user.email === email)._id);
+            if (email !== "") {
+                try {
+                    if (data.data) {
+                        setUserId(data.data.find(user => user.email === email)._id);
+                    }
+                } catch (error) {
+                    console.error('getUser error:', error);
                 }
-            } catch (error) {
-                console.error('getUser error:', error);
             }
         }
           
