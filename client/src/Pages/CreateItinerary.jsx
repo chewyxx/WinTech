@@ -6,6 +6,7 @@ import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
 import '../Styles/CreateItinerary.css';
 import { ToastContainer, toast } from "react-toastify";
+import CountrySelect from "../Components/CountrySelect";
 import MultipleSelectChip from "../Components/MultipleSelectChip";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -173,7 +174,7 @@ const CreateItinerary = () => {
 
                         <div className="field_info_container">
                             <label htmlFor="country">Country</label>
-                            <input type="text" placeholder={"Enter country"} value={country} onChange={(e) => setCountry(e.target.value)} />
+                            <CountrySelect onChange={(e) => setCountry(e.value)}/>
                         </div>
 
                         <div className="field_info_container">
