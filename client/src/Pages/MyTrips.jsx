@@ -4,11 +4,16 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
+import ItineraryCard from "../Components/ItineraryCard";
+import { Box, IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import "../Styles/MyTrips.css";
 
 const MyTrips = () => {
     const [email, setEmail] = useState("");
     const [userId, setUserId] = useState("");
     const [cookies, removeCookie] = useCookies([]);
+    const [username, setUsername] = useState("");
 
     const [itineraries, setItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -27,6 +32,7 @@ const MyTrips = () => {
                 const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
 
                 setEmail(res.data.email);
+                setUsername(res.data.user);
 
                 if (!res.data.status) {
                   removeCookie("token");
@@ -87,40 +93,29 @@ const MyTrips = () => {
     return (
         <div className="home_page">
             <div>
-        <NavBar/>
+                <NavBar/>
             </div>
-            <div className="p-4">
+            <div className="mytrips">
                 <h3>My Trips</h3>
-                <Link to='/itineraries/create'>
-                    + Add trip
-                </Link>
+                    <IconButton>
+                        <Link to='/itineraries/create'> 
+                            <AddCircleIcon fontSize="large" sx={{color:"#008000"}}/>
+                        </Link>
+                    </IconButton>
             </div>
             
             { loading ? (
                 <h1>loading...</h1>
                 ) : (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Title</th>
-                                <th>Country</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {itineraries.map((itinerary, index) => (
-                                <tr key={itinerary._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{itinerary.title}</td>
-                                    <td>{itinerary.country}</td>
-                                    <td>{itinerary.startDate}</td>
-                                    <td>{itinerary.endDate}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Box className="mytrips" sx={{m: 2, mr: '40rem'}}>
+                        {itineraries.map((itinerary, index) => (
+                            <ItineraryCard 
+                            key={itinerary._id}
+                            itinerary={itinerary}
+                            username={username}
+                            />
+                        ))}
+                    </Box>
                 )
             }
         </div>
