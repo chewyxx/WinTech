@@ -107,12 +107,13 @@ const MyTrips = () => {
             { loading ? (
                 <h1>loading...</h1>
                 ) : (
-                    <Box className="mytrips" sx={{m: 2, mr: '40rem'}}>
+                    <Box className="mytrips" sx={{m: 2, width: "50rem"}}>
                         {itineraries.map((itinerary, index) => (
                             <ItineraryCard 
                             key={itinerary._id}
                             itinerary={itinerary}
                             username={username}
+                            userId={userId}
                             />
                         ))}
                     </Box>
