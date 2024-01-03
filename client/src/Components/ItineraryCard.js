@@ -9,12 +9,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "../Styles/ItineraryCard.css";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 
-export default function ItineraryCard({ itinerary, username, userId }) {
+export default function ItineraryCard({ itinerary, username, handleDeleteItinerary }) {
     const [anchorElItinerary, setAnchorElItinerary] = useState(null);
     const settings = ['Edit','Delete'];
+    const startDate = new Date(itinerary.startDate).toLocaleDateString();
+    const endDate = new Date(itinerary.endDate).toLocaleDateString();
+    const diffTime = Math.abs(new Date(itinerary.startDate) - new Date(itinerary.endDate));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
     const handleOpenItineraryMenu = (event) => {
         setAnchorElItinerary(event.currentTarget);
@@ -24,39 +26,11 @@ export default function ItineraryCard({ itinerary, username, userId }) {
         setAnchorElItinerary(null);
     };
 
-    const handleDeleteItinerary = async (itinerary) => {
-        try {
-            const res = await axios.delete(`http://localhost:4000/itineraries/${userId}/${itinerary._id}`, { withCredentials: true });
-            if (res.data.success) {
-                handleSuccess("Deleting itinerary");
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                handleError("Error, itinerary unable to be deleted!");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const handleError = (err) => {
-        toast.error(err, {
-            position: "bottom-left",
-        });
-    }
-
-    const handleSuccess = (msg) => {
-        toast.success(msg, {
-            position: "bottom-left",
-            autoClose: 1000,
-        });
-    }
-
     const settingsBar = (command) => {
         if (command === "Edit") {
             // itinerary details / activities page
         } else if (command === "Delete") {
             handleDeleteItinerary(itinerary);
-            
         }
     };
 
@@ -109,12 +83,12 @@ export default function ItineraryCard({ itinerary, username, userId }) {
                     </Menu>
                 </Box>
 
-                <Typography component="div" variant="h5" sx = {{mt: -4}}>
+                <Typography component="div" variant="h5" sx = {{mt: -4, fontWeight: 'bold'}} color="#026670">
                     {itinerary.title}
                 </Typography>
 
-                <Typography variant="subtitle1" color="text.secondary" component="div">
-                    {itinerary.country}
+                <Typography variant="subtitle1" color="#026670" component="div"  sx = {{fontWeight: 500}}>
+                    {diffDays} day trip in {itinerary.country} 
                 </Typography>
             </CardContent>
             <Box sx={{ display: 'flex', ml: 1, mb: 1 }}>
@@ -124,19 +98,17 @@ export default function ItineraryCard({ itinerary, username, userId }) {
                     
                     <LocationCityIcon sx = {{mr: 0.2, mb: -0.3, ml: 3}}/>
                     {itinerary.cities}
-                </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', ml: 1, mb: 1 }}>
-                <Typography>
+
+                    <Typography display="block" sx = {{mt: 1}}>
                     <PersonIcon sx = {{mr: 0.2, mb: -0.3}}/>
                     {username}
-                    
+
                     <CalendarTodayIcon sx = {{mr: 0.25, mb: -0.3, ml: 3}}/>
-                    {itinerary.startDate}
+                    {startDate} to {endDate} 
+                    </Typography>
                 </Typography>
             </Box>
         </Box>
-        <ToastContainer className="toast_container" />
     </Card>
   );
 }

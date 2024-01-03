@@ -8,6 +8,7 @@ import ItineraryCard from "../Components/ItineraryCard";
 import { Box, IconButton } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "../Styles/MyTrips.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const MyTrips = () => {
     const [email, setEmail] = useState("");
@@ -90,6 +91,31 @@ const MyTrips = () => {
         }
     }, [userId, navigate, itineraries, loading]);
 
+    const handleDeleteItinerary = (itinerary) => {
+         if (window.confirm('Are you sure you wish to delete this item?')) {
+            deleteItinerary(itinerary) 
+        } 
+    }
+
+    const deleteItinerary = async (itinerary) => {
+        try {
+            const res = await axios.delete(`http://localhost:4000/itineraries/${userId}/${itinerary._id}`, { withCredentials: true });
+            if (res.data.success) {
+                window.location.reload();
+            } else {
+                handleError("Error, itinerary unable to be deleted!");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleError = (err) => {
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    }
+
     return (
         <div className="home_page">
             <div>
@@ -113,12 +139,13 @@ const MyTrips = () => {
                             key={itinerary._id}
                             itinerary={itinerary}
                             username={username}
-                            userId={userId}
+                            handleDeleteItinerary = {handleDeleteItinerary}
                             />
                         ))}
                     </Box>
                 )
             }
+            <ToastContainer className="toast_container" />
         </div>
     )
 }
