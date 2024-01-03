@@ -17,7 +17,7 @@ const itinerarySchema = new mongoose.Schema(
         },
         cities: {
             type: [String],
-            default: [" "],
+            default: [],
         },
         startDate: {
             type: Date,
@@ -30,6 +30,14 @@ const itinerarySchema = new mongoose.Schema(
         groupSize: {
             type: Number,
             default: 1,
+        },
+        interests: {
+            type: [String],
+            default: [],
+        },
+        demographics: {
+            type: [String],
+            default: [],
         },
         activities: [
             {
