@@ -4,21 +4,49 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
+import '../Styles/CreateItinerary.css';
+import { ToastContainer, toast } from "react-toastify";
+import MultipleSelectChip from "../Components/MultipleSelectChip";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const CreateItinerary = () => {
+    const fixedInterests = [
+        "Shopping",
+        "Eating",
+        "Sightseeing",
+        "Outdoor Activities",
+        "Indoor Activities",
+        "Museums",
+        "Animals",
+    ];
+
+    const fixedDemographics = [
+        "Family",
+        "Friends",
+        "Couples",
+        "Solo",
+        "Disabled",
+        "Elderly",
+    ];
+
     const [email, setEmail] = useState("");
     const [cookies, removeCookie] = useCookies([]);
     const [userId, setUserId] = useState("");
-    const [username, setUsername] = useState("");
 
     const [title, setTitle] = useState('');
     const [country, setCountry] = useState('');
+    const [cities, setCities] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [groupSize, setGroupSize] = useState(1);
+    const [interests, setInterests] = useState([]);
+    const [demographics, setDemographics] = useState([]);
 
     const navigate = useNavigate();
     const { data } = useFetch(`http://localhost:4000/api/users`);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -31,7 +59,6 @@ const CreateItinerary = () => {
                 const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
 
                 setEmail(res.data.email);
-                setUsername(res.data.user);
 
                 if (!res.data.status) {
                   removeCookie("token");
@@ -59,87 +86,146 @@ const CreateItinerary = () => {
         getUser();
     }, [navigate, cookies, removeCookie, email, data]);
 
-    const handleSaveItinerary = () => {
+    const handleError = (err) => {
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    }
+
+    const handleSuccess = (msg) => {
+        toast.success(msg, {
+            position: "bottom-left",
+            autoClose: 3000,
+        });
+    }
+
+    const handleSave = async () => {
         const data = {
             title,
             country,
+            cities,
             startDate,
             endDate,
+            groupSize,
+            interests,
+            demographics,
         };
         setLoading(true);
 
-        if (startDate > endDate) {
-            alert('Start date cannot be after end date');
-            setLoading(false);
-            return;
-        }
+        try {
+            if (title === "" || country === "" || startDate === "" || endDate === "") {
+                setLoading(false);
+                handleError('Please fill out all required fields (Title, Country, Start Date, End Date)');
+                return;
+            }
 
-        axios.post(`http://localhost:4000/itineraries/${userId}`, data)
-            .then(() => {
+            if (groupSize < 1 || groupSize > 20) {
                 setLoading(false);
-                navigate('/itineraries');
-            })
-            .catch((error) => {
+                handleError('Group size must be between 1 and 20');
+                return;
+            }
+
+            if (startDate > endDate) {
                 setLoading(false);
-                alert('An error occurred. Please check console');
-                console.log(error);
-            })
+                handleError('Start date cannot be after end date');
+                return;
+            }
+
+            const res = await axios.post(`http://localhost:4000/itineraries/${userId}`, data, { withCredentials: true });
+
+            if (res.data.success) {
+                setLoading(false);
+                handleSuccess('Itinerary created successfully');
+                setTimeout(() => {
+                    navigate('/itineraries');
+                }, 3000);
+            }
+        } catch (error) {
+            setLoading(false);
+            console.error('Error:', error);
+        }
     };
 
-    const Logout = () => {
-        removeCookie("token");
-        navigate("/login");
-      };
+    const handleCancel = () => {
+        setLoading(false);
+        navigate('/itineraries');
+    };
 
     return (
-        <div className="home_page">
-            <NavBar user={username} logout={Logout}/>
-            <h1 className="text-3xl f-4">Create Itinerary</h1>
-            { loading ? <p>loading...</p> : ''}
+        <>
+            <div className="create_itinerary_page">
+                <NavBar/>
 
-            <div className="flex flex-cool border-2">
-                <div className="my-4">
-                    <label className="text-xl mr-4">Title</label>
-                    <input 
-                        type="text" 
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="border-2 px-4"
-                    />
-                </div>
-                <div className="my-4">
-                    <label className="text-xl mr-4">Country</label>
-                    <input 
-                        type="text" 
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        className="border-2 px-4"
-                    />
-                </div>
-                <div className="my-4">
-                    <label className="text-xl mr-4">Start date</label>
-                    <input 
-                        type="text" 
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="border-2 px-4"
-                    />
-                </div>
-                <div className="my-4">
-                    <label className="text-xl mr-4">End date</label>
-                    <input 
-                        type="text" 
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="border-2 px-4"
-                    />
+                <div className="create_itinerary_header">
+                    <h1>Create your itinerary</h1>
+                    <h2>Plan your upcoming trip!</h2>
                 </div>
 
-                <button onClick={handleSaveItinerary}>
-                    Save
-                </button>
+
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div className="create_itinerary_form">
+                        <div className="field_info_container">
+                            <label htmlFor="title">Title</label>
+                            <input type="text" placeholder={"Enter title"} value={title} onChange={(e) => setTitle(e.target.value)} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="country">Country</label>
+                            <input type="text" placeholder={"Enter country"} value={country} onChange={(e) => setCountry(e.target.value)} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="cities">Cities</label>
+                            <input type="text" placeholder={"Enter cities (Taipei, Tainan, Taidong)"} value={cities} onChange={(e) => setCities(e.target.value.split(',').map((city) => city.trim()))} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <label htmlFor="dates">Dates</label>
+
+                                <DatePicker 
+                                    label="Start Date"
+                                    value={startDate} 
+                                    onChange={(newDate) => setStartDate(newDate)}
+                                    sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
+                                />
+
+                                <DatePicker 
+                                    label="End Date" 
+                                    value={endDate} 
+                                    onChange={(newDate) => setEndDate(newDate)} 
+                                    sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
+                                />
+                            </LocalizationProvider>
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="groupSize">Group Size</label>
+                            <input type="number" min={1} max={20} value={groupSize} onChange={(e) => setGroupSize(e.target.value)} />
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="interests">Interests</label>
+                            <MultipleSelectChip options={fixedInterests} label="Select interests" onChange={(newInterests) => setInterests(newInterests)}/>
+                        </div>
+
+                        <div className="field_info_container">
+                            <label htmlFor="demographics">Demographics</label>
+                            <MultipleSelectChip options={fixedDemographics} label="Select demographics" onChange={(newDemographics) => setDemographics(newDemographics)}/>
+                        </div>
+
+                        <div className="create_itinerary_buttons">
+                            <button onClick={handleSave} className="save_button">Save</button>
+                            <button onClick={handleCancel} className="cancel_button">Cancel</button>
+                        </div>
+                    </div>
+                )}
+
+                <ToastContainer className="toast_container"/>
             </div>
-        </div>
+        </>
     )
 }
 

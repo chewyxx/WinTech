@@ -4,7 +4,7 @@ const Itinerary = require("../Models/ItineraryModel");
 // create itinerary
 module.exports.createItinerary = async (req, res) => {
     const userId = req.params.userId;
-    const { title, country, cities, startDate, endDate , groupSize } = req.body;
+    const { title, country, cities, startDate, endDate , groupSize, interests, demographics } = req.body;
 
     try {
         if (!title || !country || !startDate || !endDate) {
@@ -22,6 +22,8 @@ module.exports.createItinerary = async (req, res) => {
             startDate: startDate,
             endDate: endDate,
             groupSize: groupSize,
+            interests: interests,
+            demographics: demographics,
         });
 
         await User.findByIdAndUpdate(userId, {
