@@ -12,7 +12,6 @@ export default function NavBar() {
 
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   useEffect(() => {
@@ -53,16 +52,17 @@ export default function NavBar() {
   const profile = () => {
     setAnchorElUser(null);
     navigate("/profile");
+    navigate(0); // if on same page already -- to refresh
   };
 
   const popularDestinations = () => {
-    setAnchorElNav(null);
     navigate("/popular-destinations");
+    navigate(0); // if on same page already -- to refresh
   };
 
   const myTrips = () => {
-    setAnchorElNav(null);
     navigate("/itineraries");
+    navigate(0); // if on same page already -- to refresh
   };
   
   function stringAvatar(name) {

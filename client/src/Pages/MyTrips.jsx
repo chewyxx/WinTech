@@ -4,11 +4,17 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
+import ItineraryCard from "../Components/ItineraryCard";
+import { Box, IconButton } from "@mui/material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import "../Styles/MyTrips.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const MyTrips = () => {
     const [email, setEmail] = useState("");
     const [userId, setUserId] = useState("");
     const [cookies, removeCookie] = useCookies([]);
+    const [username, setUsername] = useState("");
 
     const [itineraries, setItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -27,6 +33,7 @@ const MyTrips = () => {
                 const res = await axios.post("http://localhost:4000", {}, { withCredentials: true });
 
                 setEmail(res.data.email);
+                setUsername(res.data.user);
 
                 if (!res.data.status) {
                   removeCookie("token");
@@ -84,45 +91,62 @@ const MyTrips = () => {
         }
     }, [userId, navigate, itineraries, loading]);
 
+    const handleDeleteItinerary = (itinerary) => {
+         if (window.confirm('Are you sure you wish to delete this item?')) {
+            deleteItinerary(itinerary) 
+        } 
+    }
+
+    const deleteItinerary = async (itinerary) => {
+        try {
+            const res = await axios.delete(`http://localhost:4000/itineraries/${userId}/${itinerary._id}`, { withCredentials: true });
+            if (res.data.success) {
+                window.location.reload();
+            } else {
+                handleError("Error, itinerary unable to be deleted!");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleError = (err) => {
+        toast.error(err, {
+            position: "bottom-left",
+        });
+    }
+
     return (
         <div className="home_page">
             <div>
-        <NavBar/>
+                <NavBar/>
             </div>
-            <div className="p-4">
+            <div className="mytrips">
                 <h3>My Trips</h3>
-                <Link to='/itineraries/create'>
-                    + Add trip
-                </Link>
+                    <IconButton>
+                        <Link to='/itineraries/create'> 
+                            <AddCircleIcon fontSize="large" sx={{color:"#008000"}}/>
+                        </Link>
+                    </IconButton>
             </div>
             
             { loading ? (
                 <h1>loading...</h1>
                 ) : (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Title</th>
-                                <th>Country</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {itineraries.map((itinerary, index) => (
-                                <tr key={itinerary._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{itinerary.title}</td>
-                                    <td>{itinerary.country}</td>
-                                    <td>{itinerary.startDate}</td>
-                                    <td>{itinerary.endDate}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Box className="mytrips" sx={{m: 2, width: "50rem"}}>
+                        {itineraries.sort((a,b) => {return new Date(a.startDate) - new Date(b.startDate)} )
+                        .map((itinerary, index) => (
+                            <ItineraryCard 
+                            key={itinerary._id}
+                            itinerary={itinerary}
+                            username={username}
+                            handleDeleteItinerary = {handleDeleteItinerary}
+                            />
+                        ))}
+                    </Box>
                 )
             }
+            <ToastContainer className="toast_container" />
         </div>
     )
 }

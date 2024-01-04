@@ -1,0 +1,14 @@
+.mytrips {
+    margin-left: 1rem;
+    margin-right: 40rem;
+}
+
+h3 {
+    margin-top: 1rem;
+    display: inline-block;
+    font-size: 2.7rem;
+}
+
+.mytrips button:hover {
+    background-color: rgba(0, 212, 255, 0);
+  }

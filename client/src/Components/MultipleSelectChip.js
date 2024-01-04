@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -48,7 +49,7 @@ export default function MultipleSelectChip({options, label, onChange}) {
   return (
     <div>
       <FormControl sx={{ minWidth: 400, bgcolor: "#C9E0E7", borderRadius: 2 }}>
-        <InputLabel id="demo-multiple-chip-label" size="small">{label}</InputLabel>
+        <InputLabel id="demo-multiple-chip-label"><Typography sx ={{ color: "grey" }}>{label}</Typography></InputLabel>
         <Select
           sx={{boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }}}
           labelId="demo-multiple-chip-label"
@@ -57,7 +58,7 @@ export default function MultipleSelectChip({options, label, onChange}) {
           autoWidth
           value={optionChosen}
           onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          input={<OutlinedInput id="select-multiple-chip" label={label}/>}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
