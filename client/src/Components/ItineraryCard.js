@@ -9,12 +9,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "../Styles/ItineraryCard.css";
+import moment from 'moment';
 
 export default function ItineraryCard({ itinerary, username, handleDeleteItinerary }) {
     const [anchorElItinerary, setAnchorElItinerary] = useState(null);
     const settings = ['Edit','Delete'];
-    const startDate = new Date(itinerary.startDate).toLocaleDateString();
-    const endDate = new Date(itinerary.endDate).toLocaleDateString();
+    const startDate = moment(new Date(itinerary.startDate).toLocaleDateString()).format("DD/MM/YYYY");
+    const endDate = moment(new Date(itinerary.endDate).toLocaleDateString()).format("DD/MM/YYYY");
     const diffTime = Math.abs(new Date(itinerary.startDate) - new Date(itinerary.endDate));
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 

@@ -134,7 +134,8 @@ const MyTrips = () => {
                 <h1>loading...</h1>
                 ) : (
                     <Box className="mytrips" sx={{m: 2, width: "50rem"}}>
-                        {itineraries.map((itinerary, index) => (
+                        {itineraries.sort((a,b) => {return new Date(a.startDate) - new Date(b.startDate)} )
+                        .map((itinerary, index) => (
                             <ItineraryCard 
                             key={itinerary._id}
                             itinerary={itinerary}
