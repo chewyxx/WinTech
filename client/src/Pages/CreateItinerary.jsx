@@ -189,6 +189,7 @@ const CreateItinerary = () => {
                                     label="Start Date"
                                     value={startDate} 
                                     onChange={(newDate) => setStartDate(newDate)}
+                                    format="DD/MM/YYYY"
                                     sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
                                 />
 
@@ -196,6 +197,7 @@ const CreateItinerary = () => {
                                     label="End Date" 
                                     value={endDate} 
                                     onChange={(newDate) => setEndDate(newDate)} 
+                                    format="DD/MM/YYYY"
                                     sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
                                 />
                             </LocalizationProvider>
