@@ -4,8 +4,9 @@ const Itinerary = require("../Models/ItineraryModel");
 // create itinerary
 module.exports.createItinerary = async (req, res) => {
     const userId = req.params.userId;
-    const { title, country, cities, startDate, endDate , groupSize, interests, demographics } = req.body;
-
+    const image = req.file.filename;
+    const { title, country, cities, startDate, endDate, groupSize, interests, demographics } = req.body;
+ 
     try {
         if (!title || !country || !startDate || !endDate) {
             return res.status(400).json({
@@ -14,6 +15,8 @@ module.exports.createItinerary = async (req, res) => {
             })
         }
 
+        console.log('backend image: ', image)
+
         const itinerary = await Itinerary.create({
             userId: userId,
             title: title,
@@ -21,6 +24,7 @@ module.exports.createItinerary = async (req, res) => {
             cities: cities,
             startDate: startDate,
             endDate: endDate,
+            image: image,
             groupSize: groupSize,
             interests: interests,
             demographics: demographics,

@@ -27,6 +27,10 @@ const itinerarySchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
+        image: {
+            type: String,
+            default: "",
+        },
         groupSize: {
             type: Number,
             default: 1,

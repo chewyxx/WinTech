@@ -35,6 +35,7 @@ app.use(cookieParser());
 
 // middlewares
 app.use(express.json());
+app.use(express.static("Public"));
 
 app.use("/", authRoute);
 app.use("/api/users", userRoute);

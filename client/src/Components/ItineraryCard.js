@@ -50,7 +50,7 @@ export default function ItineraryCard({ itinerary, username, handleDeleteItinera
             style={{height: "10.5rem", paddingTop: '1.5%', paddingBottom: '1.5%'}}
             component="img"
             sx={{ width: 175, borderRadius: '1rem' }}
-            image={require("../Images/landing_wallpaper.jpg")}
+            src={`http://localhost:4000/Images/Itineraries/${itinerary.image}`}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <CardContent sx = {{mt:-3}}>
