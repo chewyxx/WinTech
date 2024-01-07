@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Your password is required"],
   },
+  itineraries: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Itinerary",
+    }
+  ],
   createdAt: {
     type: Date,
     default: new Date(),

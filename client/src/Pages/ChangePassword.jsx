@@ -41,12 +41,14 @@ const ChangePassword = () => {
         };
 
         const getUser = () => {
-            try {
-                if (data.data) {
-                    setId(data.data.find(user => user.username === username)._id);
+            if (username !== "") {
+                try {
+                    if (data.data) {
+                        setId(data.data.find(user => user.username === username)._id);
+                    }
+                } catch (error) {
+                    console.error('getUser error:', error);
                 }
-            } catch (error) {
-                console.error('getUser error:', error);
             }
         }
           
