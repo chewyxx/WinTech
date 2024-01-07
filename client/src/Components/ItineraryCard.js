@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Box, Card, CardContent, CardMedia, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import PlaceIcon from '@mui/icons-material/Place';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -11,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import "../Styles/ItineraryCard.css";
 
 export default function ItineraryCard({ itinerary, username, handleDeleteItinerary }) {
-    console.log(itinerary.cities);
+    const navigate = useNavigate();
     const [anchorElItinerary, setAnchorElItinerary] = useState(null);
     const settings = ['Edit','Delete'];
     const startDate = new Date(itinerary.startDate).toLocaleDateString();
@@ -29,7 +30,7 @@ export default function ItineraryCard({ itinerary, username, handleDeleteItinera
 
     const settingsBar = (command) => {
         if (command === "Edit") {
-            // itinerary details / activities page
+            navigate(`/itineraries/edit/${itinerary._id}`);
         } else if (command === "Delete") {
             handleDeleteItinerary(itinerary);
         }
@@ -49,7 +50,7 @@ export default function ItineraryCard({ itinerary, username, handleDeleteItinera
             style={{height: "10.5rem", paddingTop: '1.5%', paddingBottom: '1.5%'}}
             component="img"
             sx={{ width: 175, borderRadius: '1rem' }}
-            image={require("../Images/landing_wallpaper.jpg")}
+            src={`http://localhost:4000/Images/Itineraries/${itinerary.image}`}
         />
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <CardContent sx = {{mt:-3}}>

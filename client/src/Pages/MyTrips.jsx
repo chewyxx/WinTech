@@ -61,21 +61,7 @@ const MyTrips = () => {
         getUser();
 
     }, [navigate, cookies, removeCookie, email, data, loading, userId]);
-
-    /*const handleItinerarys = async () => {
-        if (loading && userId !== "") {
-            await axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true })
-                .then((response) => {
-                    setItineraries(response.data.data);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setLoading(true);
-                    console.log("error");
-                });
-        }
-    }*/
+    
     useEffect(() => {
         if (loading && userId !== "") {
             axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true })

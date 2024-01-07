@@ -29,9 +29,13 @@ function getStyles(option, optionChosen, theme) {
   };
 }
 
-export default function MultipleSelectChip({options, label, onChange}) {
+export default function MultipleSelectChip({options, label, onChange, chosen}) {
   const theme = useTheme();
+  
   const [optionChosen, setOptionChosen] = React.useState([]);
+  if (chosen !== optionChosen && chosen !== undefined && chosen !== null && chosen.length !== 0) {
+    setOptionChosen(chosen)
+  };
 
   const handleChange = (event) => {
     const {

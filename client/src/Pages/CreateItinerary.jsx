@@ -41,6 +41,7 @@ const CreateItinerary = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [groupSize, setGroupSize] = useState(1);
+    const [image, setImage] = useState('');
     const [interests, setInterests] = useState([]);
     const [demographics, setDemographics] = useState([]);
 
@@ -100,16 +101,19 @@ const CreateItinerary = () => {
     }
 
     const handleSave = async () => {
-        const data = {
-            title,
-            country,
-            cities,
-            startDate,
-            endDate,
-            groupSize,
-            interests,
-            demographics,
-        };
+        console.log(image)
+
+        const data = new FormData();
+        data.append('title', title);
+        data.append('country', country);
+        data.append('cities', cities);
+        data.append('startDate', startDate);
+        data.append('endDate', endDate);
+        data.append('groupSize', groupSize);
+        data.append('image', image);
+        data.append('interests', interests);
+        data.append('demographics', demographics);
+
         setLoading(true);
 
         try {
@@ -131,6 +135,7 @@ const CreateItinerary = () => {
                 return;
             }
 
+            // causes error if image is not uploaded (server crashes)
             const res = await axios.post(`http://localhost:4000/itineraries/${userId}`, data, { withCredentials: true });
 
             if (res.data.success) {
@@ -165,20 +170,37 @@ const CreateItinerary = () => {
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
-                    <div className="create_itinerary_form">
+                    <div className="create_itinerary_form" onSubmit={handleSave}>
                         <div className="field_info_container">
                             <label htmlFor="title">Title</label>
-                            <input type="text" placeholder={"Enter title"} value={title} onChange={(e) => setTitle(e.target.value)} />
+                            <input 
+                                type="text" 
+                                placeholder={"Enter title"}
+                                name="title" 
+                                value={title} 
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
                         </div>
 
                         <div className="field_info_container">
                             <label htmlFor="country">Country</label>
-                            <input type="text" placeholder={"Enter country"} value={country} onChange={(e) => setCountry(e.target.value)} />
+                            <input 
+                                type="text" 
+                                placeholder={"Enter country"}
+                                name="country"
+                                value={country} 
+                                onChange={(e) => setCountry(e.target.value)}
+                            />
                         </div>
 
                         <div className="field_info_container">
                             <label htmlFor="cities">Cities</label>
-                            <input type="text" placeholder={"Enter cities (Taipei, Tainan, Taidong)"} value={cities} onChange={(e) => setCities(e.target.value.split(',').map((city) => city.trim()))} />
+                            <input 
+                                type="text" 
+                                placeholder={"Enter cities (Taipei,Tainan,Taidong)"} 
+                                value={cities} 
+                                onChange={(e) => setCities(e.target.value.split(',').map((city) => city.trim()))}
+                            />
                         </div>
 
                         <div className="field_info_container">
@@ -204,18 +226,43 @@ const CreateItinerary = () => {
                         </div>
 
                         <div className="field_info_container">
+                            <label htmlFor="image">Image</label>
+                            <input 
+                                type="file" 
+                                accept=".png, .jpg, .jpeg"
+                                name="image" 
+                                onChange={(e) => setImage(e.target.files[0])}
+                            />
+                        </div>
+
+                        <div className="field_info_container">
                             <label htmlFor="groupSize">Group Size</label>
-                            <input type="number" min={1} max={20} value={groupSize} onChange={(e) => setGroupSize(e.target.value)} />
+                            <input 
+                                type="number" 
+                                min={1} 
+                                max={20}
+                                name="groupSize"
+                                value={groupSize} 
+                                onChange={(e) => setGroupSize(e.target.value)} 
+                            />
                         </div>
 
                         <div className="field_info_container">
                             <label htmlFor="interests">Interests</label>
-                            <MultipleSelectChip options={fixedInterests} label="Select interests" onChange={(newInterests) => setInterests(newInterests)}/>
+                            <MultipleSelectChip 
+                                options={fixedInterests} 
+                                label="Select interests" 
+                                onChange={(newInterests) => setInterests(newInterests)}
+                            />
                         </div>
 
                         <div className="field_info_container">
                             <label htmlFor="demographics">Demographics</label>
-                            <MultipleSelectChip options={fixedDemographics} label="Select demographics" onChange={(newDemographics) => setDemographics(newDemographics)}/>
+                            <MultipleSelectChip 
+                                options={fixedDemographics} 
+                                label="Select demographics" 
+                                onChange={(newDemographics) => setDemographics(newDemographics)}
+                            />
                         </div>
 
                         <div className="create_itinerary_buttons">
