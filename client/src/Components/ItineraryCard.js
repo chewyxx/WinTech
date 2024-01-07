@@ -10,13 +10,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "../Styles/ItineraryCard.css";
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 export default function ItineraryCard({ itinerary, username, handleDeleteItinerary }) {
     const [anchorElItinerary, setAnchorElItinerary] = useState(null);
     const settings = ['Edit','Delete'];
     const startDate = moment(new Date(itinerary.startDate).toLocaleDateString()).format("DD/MM/YYYY");
     const endDate = moment(new Date(itinerary.endDate).toLocaleDateString()).format("DD/MM/YYYY");
-    const diffTime = Math.abs(new Date(itinerary.startDate) - new Date(itinerary.endDate));
+    const diffTime = Math.abs(new Date(itinerary.endDate) - new Date(itinerary.startDate) + 1);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
     const handleOpenItineraryMenu = (event) => {
@@ -85,7 +86,9 @@ export default function ItineraryCard({ itinerary, username, handleDeleteItinera
                 </Box>
 
                 <Typography component="div" variant="h5" sx = {{mt: -4, fontWeight: 'bold'}} color="#026670">
-                    {itinerary.title}
+                    <Link to={`/itineraries/${itinerary._id}`} style={{ textDecoration: 'none', color: '#026670' }}>
+                        {itinerary.title}
+                    </Link>
                 </Typography>
 
                 <Typography variant="subtitle1" color="#026670" component="div"  sx = {{fontWeight: 500}}>
