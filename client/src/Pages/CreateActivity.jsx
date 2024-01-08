@@ -134,7 +134,7 @@ const CreateActivity = () => {
 
     const handleCancel = () => {
         setLoading(false);
-        navigate('/itineraries');
+        navigate('/itineraries/' + itineraryId);
     };
 
     return (

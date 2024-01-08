@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from '../Components/Navbar';
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Button } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "../Styles/ItineraryDetails.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -126,14 +126,35 @@ const ItineraryDetails = () => {
        });
    }
 
+   const sortActivitiesByDays = (activities) => {
+    const activitiesByDays = {};
+
+    activities.forEach(activity => {
+        // Convert the date to a string in the format 'yyyy-mm-dd'
+        const date = new Date(activity.date).toISOString().split('T')[0];
+
+        // If this date is not already a key in the object, add it with an empty array as its value
+        if (!activitiesByDays[date]) {
+            activitiesByDays[date] = [];
+        }
+
+        // Add the activity to the array for this date
+        activitiesByDays[date].push(activity);
+    });
+
+    // Convert the object to an array of arrays
+    const activitiesByDaysArray = Object.values(activitiesByDays);
+
+    return activitiesByDaysArray;
+}
+
     return (
         <div className="home_page">
             <div>
                 <NavBar/>
-                <h1>{itineraryTitle}</h1>
             </div>
             <div className="itinerarydetails">
-                <h3>Activities</h3>
+                <h3>{itineraryTitle}</h3>
                     <IconButton>
                         <Link to={`/itineraries/${itineraryId}/add-activity`}> 
                             <AddCircleIcon fontSize="large" sx={{color:"#008000"}}/>
@@ -142,14 +163,18 @@ const ItineraryDetails = () => {
             </div>
         
             <Box className="itinerarydetails" sx={{m: 2, width: "50rem"}}>
-                {activities.sort((a,b) => {return new Date(a.date) - new Date(b.date)} )
-                        .map((activity, index) => (
-                            <ActivityCard 
+                {sortActivitiesByDays(activities).map((activitiesForOneDay, index) => (
+                    <div key={index}>
+                    <h4>Day {index + 1}</h4>
+                    {activitiesForOneDay.map(activity => (
+                        <ActivityCard 
                             key={activity._id}
                             activity={activity}
-                            handleDeleteActivity = {handleDeleteActivity}
-                            />
-                        ))}
+                            handleDeleteActivity={handleDeleteActivity}
+                        />
+                    ))}
+                    </div>
+                ))}
             </Box>
             <ToastContainer className="toast_container" />
         </div>

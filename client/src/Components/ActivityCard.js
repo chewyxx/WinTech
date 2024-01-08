@@ -3,9 +3,6 @@ import { useState } from 'react';
 import { Box, Card, CardContent, CardMedia, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PlaceIcon from '@mui/icons-material/Place';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import PersonIcon from '@mui/icons-material/Person';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -86,15 +83,15 @@ export default function ActivityCard({ activity, handleDeleteActivity }) {
                 </Typography>
 
                 <Typography variant="subtitle1" color="#026670" component="div"  sx = {{fontWeight: 500}}>
-                    {activity.remark} 
+                    Note: {activity.remark} 
                 </Typography>
             </CardContent>
             <Box sx={{ display: 'flex', ml: 1, mb: 1 }}>
                 <Typography>
-                    <PlaceIcon />
+                    <PlaceIcon sx = {{mr: 0.3, mb: -0.7, ml: 0.4}}/>
                     {activity.address}
                     
-                    <AccessTimeFilledIcon sx = {{mr: 0.2, mb: -0.3, ml: 3}}/>
+                    <AccessTimeFilledIcon sx = {{mr: 0.3, mb: -0.7, ml: 3}}/>
                     {activity.openingHours}
                 </Typography>
             </Box>
