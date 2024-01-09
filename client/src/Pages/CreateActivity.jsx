@@ -9,6 +9,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 const CreateActivity = () => {
 
@@ -16,6 +18,8 @@ const CreateActivity = () => {
     const [cookies, removeCookie] = useCookies([]);
     const [userId, setUserId] = useState("");
     const [itineraryId, setItineraryId] = useState("");
+    const [itineraryStartDate, setItineraryStartDate] = useState("");
+    const [itineraryEndDate, setItineraryEndDate] = useState("");
     
     const [title, setTitle] = useState('');
     const [link, setLink] = useState('');
@@ -28,6 +32,8 @@ const CreateActivity = () => {
     const { data } = useFetch(`http://localhost:4000/api/users`);
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
+
+    dayjs.extend(customParseFormat);
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -71,7 +77,11 @@ const CreateActivity = () => {
                     console.log(selectedItinerary);
                     if (selectedItinerary) {
                         setItineraryId(selectedItinerary._id);
-                        console.log(itineraryId);
+                        const startDate = dayjs(new Date(selectedItinerary.startDate)).format("MM/DD/YYYY");
+                        const endDate = dayjs(new Date(selectedItinerary.endDate)).format("MM/DD/YYYY");
+                        setItineraryStartDate(startDate);
+                        setItineraryEndDate(endDate);
+                        console.log(startDate, endDate);
                     } else {
                         console.error('Selected itinerary not found');
                     }
@@ -182,8 +192,10 @@ const CreateActivity = () => {
 
                                 <DatePicker 
                                     label="Date" 
-                                    value={date} 
-                                    onChange={(date) => setDate(date)} 
+                                    value={dayjs(date)} 
+                                    onChange={(date) => setDate(dayjs(date).format('MM/DD/YYYY'))} 
+                                    minDate={dayjs(itineraryStartDate)} 
+                                    maxDate={dayjs(itineraryEndDate)}
                                     sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
                                 />
                             </LocalizationProvider>
