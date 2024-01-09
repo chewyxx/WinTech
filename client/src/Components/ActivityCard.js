@@ -6,8 +6,9 @@ import PlaceIcon from '@mui/icons-material/Place';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import "../Styles/ItineraryCard.css";
-import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 export default function ActivityCard({ activity, handleDeleteActivity }) {
     const [anchorElActivity, setAnchorElActivity] = useState(null);
@@ -80,7 +81,13 @@ export default function ActivityCard({ activity, handleDeleteActivity }) {
 
                 <Typography component="div" variant="h5" sx = {{mt: -4, fontWeight: 'bold'}} color="#026670">
                     {activity.title}
+                    <Link to={activity.link} target='_blank'>
+                        <OpenInNewIcon sx = {{mb: -0.5, ml: 0.5, mr: 0.8}}/>
+                        {activity.link}
+                    </Link>
                 </Typography>
+                
+
 
                 <Typography variant="subtitle1" color="#026670" component="div"  sx = {{fontWeight: 500}}>
                     Note: {activity.remark} 

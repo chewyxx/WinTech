@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "../Components/Navbar";
 import useFetch from '../Hooks/useFetch';
-import '../Styles/CreateItinerary.css';
+import '../Styles/CreateActivity.css';
 import { ToastContainer, toast } from "react-toastify";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -109,6 +109,19 @@ const CreateActivity = () => {
         });
     }
 
+    const isValidUrl = urlString => {
+        var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+        '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+
+        return !!urlPattern.test(urlString);
+    }
+    console.log(isValidUrl(link));
+
+
     const handleSave = async () => {
         const data = {
             title,
@@ -124,6 +137,12 @@ const CreateActivity = () => {
             if (title === "") {
                 setLoading(false);
                 handleError('Please fill out all fields');
+                return;
+            }
+
+            if (!isValidUrl(link)) {
+                setLoading(false);
+                handleError('Please fill out a valid link');
                 return;
             }
 
@@ -148,69 +167,75 @@ const CreateActivity = () => {
     };
 
     return (
-        <>
-            <div className="create_itinerary_page">
-                <NavBar/>
+        <div className="create_activity_page">
+            <NavBar/>
 
-                <div className="create_itinerary_header">
-                    <h1>Add an activity to your itinerary</h1>
-                </div>
+            <div className="create_activity_header">
+                <h1>Add an activity to your itinerary</h1>
+            </div>
 
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <div className="create_activity_form">
+                    <div className="field_info_container">
+                        <label htmlFor="title">Title</label>
+                        <input type="text" placeholder={"Enter title"} value={title} onChange={(e) => setTitle(e.target.value)} />
+                    </div>
+                        
+                    <div className="field_info_container">
+                        <label htmlFor="link">
+                            Link
+                        </label>
+                        <input 
+                            type="text" 
+                            placeholder={"Enter link"} 
+                            value={link} 
+                            style={{border: isValidUrl(link) ? 'none' : '1px solid red'}}
+                            className={isValidUrl(link) ? "" : "invalid"}
+                            onChange={(e) => setLink(e.target.value)} 
+                        />
+                    </div>
+                        
+                    <div className="field_info_container">
+                        <label htmlFor="address">Address</label>
+                        <input type="text" placeholder={"Enter address"} value={address} onChange={(e) => setAddress(e.target.value)} />
+                    </div>
+                        
+                    <div className="field_info_container">
+                        <label htmlFor="openingHours">Opening Hours</label>
+                        <input type="text" placeholder={"Enter opening hours"} value={openingHours} onChange={(e) => setOpeningHours(e.target.value)} />
+                    </div>
+                        
+                    <div className="field_info_container">
+                        <label htmlFor="remark">Remark</label>
+                        <input type="text" placeholder={"Enter remark"} value={remark} onChange={(e) => setRemark(e.target.value)} />
+                    </div>
 
-                {loading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <div className="create_itinerary_form">
-                        <div className="field_info_container">
-                            <label htmlFor="title">Title</label>
-                            <input type="text" placeholder={"Enter title"} value={title} onChange={(e) => setTitle(e.target.value)} />
-                        </div>
-                        
-                        <div className="field_info_container">
-                            <label htmlFor="link">Link</label>
-                            <input type="text" placeholder={"Enter link"} value={link} onChange={(e) => setLink(e.target.value)} />
-                        </div>
-                        
-                        <div className="field_info_container">
-                            <label htmlFor="address">Address</label>
-                            <input type="text" placeholder={"Enter address"} value={address} onChange={(e) => setAddress(e.target.value)} />
-                        </div>
-                        
-                        <div className="field_info_container">
-                            <label htmlFor="openingHours">Opening Hours</label>
-                            <input type="text" placeholder={"Enter opening hours"} value={openingHours} onChange={(e) => setOpeningHours(e.target.value)} />
-                        </div>
-                        
-                        <div className="field_info_container">
-                            <label htmlFor="remark">Remark</label>
-                            <input type="text" placeholder={"Enter remark"} value={remark} onChange={(e) => setRemark(e.target.value)} />
-                        </div>
-
-                        <div className="field_info_container">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <div className="field_info_container">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <label htmlFor="dates">Date</label>
 
-                                <DatePicker 
-                                    label="Date" 
-                                    value={dayjs(date)} 
-                                    onChange={(date) => setDate(dayjs(date).format('MM/DD/YYYY'))} 
-                                    minDate={dayjs(itineraryStartDate)} 
-                                    maxDate={dayjs(itineraryEndDate)}
-                                    sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
-                                />
-                            </LocalizationProvider>
-                        </div>
-
-                        <div className="create_itinerary_buttons">
-                            <button onClick={handleSave} className="save_button">Save</button>
-                            <button onClick={handleCancel} className="cancel_button">Cancel</button>
-                        </div>
+                            <DatePicker 
+                                label="Date" 
+                                value={dayjs(date)} 
+                                onChange={(date) => setDate(dayjs(date).format('MM/DD/YYYY'))} 
+                                minDate={dayjs(itineraryStartDate)} 
+                                maxDate={dayjs(itineraryEndDate)}
+                                sx={{bgcolor: '#C9E0E7', borderRadius: '5px'}}
+                            />
+                        </LocalizationProvider>
                     </div>
-                )}
 
-                <ToastContainer className="toast_container"/>
-            </div>
-        </>
+                    <div className="create_activity_buttons">
+                        <button onClick={handleSave} className="save_button">Save</button>
+                        <button onClick={handleCancel} className="cancel_button">Cancel</button>
+                    </div>
+                </div>
+            )}
+
+            <ToastContainer className="toast_container"/>
+        </div>
     )
 }
 
