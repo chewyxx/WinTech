@@ -6,13 +6,14 @@ const customStyles = {
     menu: (base) => ({
         ...base,
         width: "max-content",
-        minWidth: "100%"
+        minWidth: "100%",
+        zIndex: 2,
     }),
     option: (defaultStyles, state) => ({
       ...defaultStyles,
       color: state.isSelected ? "#000000" : "#000000",
       backgroundColor: state.isSelected ? "#C9E0E7" : "#fff",
-      fontSize: '1.5rem'
+      fontSize: '20px'
     }),
 
     control: (defaultStyles) => ({
@@ -21,7 +22,7 @@ const customStyles = {
       padding: "10px",
       border: "none",
       boxShadow: "none",
-      fontSize: '1.5rem',
+      fontSize: '20px',
     }),
     singleValue: (defaultStyles) => ({ ...defaultStyles, color: "#000000" }),
   };
