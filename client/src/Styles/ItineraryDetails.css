@@ -1,6 +1,7 @@
 .itinerarydetails {
     margin-left: 1rem;
     margin-right: 40rem;
+    margin-bottom: 1rem;
 }
 .itinerarydetails h3 {
     margin-top: 1rem;
@@ -14,6 +15,11 @@
     text-decoration: underline;
     font-size: 2.5rem;
     color: #026670;
+}
+.itinerarydetails text {
+    margin-left: 1rem;
+    display: inline-block;
+    font-size: 1.5rem;
 }
 
 .itinerarydetails button:hover {

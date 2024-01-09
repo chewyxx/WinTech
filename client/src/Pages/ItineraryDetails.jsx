@@ -9,6 +9,7 @@ import "../Styles/ItineraryDetails.css";
 import { ToastContainer, toast } from "react-toastify";
 import ActivityCard from "../Components/ActivityCard";
 import useFetch from '../Hooks/useFetch';
+import dayjs from 'dayjs';
 
 const ItineraryDetails = () => {
 
@@ -19,6 +20,9 @@ const ItineraryDetails = () => {
 
     const [itineraryId, setItineraryId] = useState("");
     const [itineraryTitle, setItineraryTitle] = useState("");
+    const [itineraryStartDate, setItineraryStartDate] = useState("");
+    const [itineraryEndDate, setItineraryEndDate] = useState("");
+
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -66,10 +70,13 @@ const ItineraryDetails = () => {
                 try {
                     const res = await axios.get(`http://localhost:4000/itineraries/${userId}`, { withCredentials: true });
                     const selectedItinerary = res.data.data.find(itinerary => itinerary._id === id);
-                    console.log(selectedItinerary);
                     if (selectedItinerary) {
                         setItineraryId(selectedItinerary._id);
                         setItineraryTitle(selectedItinerary.title);
+                        const startDate = dayjs(new Date(selectedItinerary.startDate)).format("MM/DD/YYYY");
+                        const endDate = dayjs(new Date(selectedItinerary.endDate)).format("MM/DD/YYYY");
+                        setItineraryStartDate(startDate);
+                        setItineraryEndDate(endDate);
                     } else {
                         console.error('Selected itinerary not found');
                     }
@@ -105,9 +112,9 @@ const ItineraryDetails = () => {
         if (window.confirm('Are you sure you wish to delete this item?')) {
            deleteActivity(activity) 
        } 
-   }
+    }
 
-   const deleteActivity = async (activity) => {
+    const deleteActivity = async (activity) => {
        try {
            const res = await axios.delete(`http://localhost:4000/activities/${itineraryId}/${activity._id}`, { withCredentials: true });
            if (res.data.success) {
@@ -118,35 +125,44 @@ const ItineraryDetails = () => {
        } catch (error) {
            console.log(error);
        }
-   }
+    }
 
-   const handleError = (err) => {
+    const handleError = (err) => {
        toast.error(err, {
            position: "bottom-left",
        });
-   }
+    }
 
-   const sortActivitiesByDays = (activities) => {
-    const activitiesByDays = {};
+    const sortActivitiesByDays = (activities, startDate, endDate) => {
+        const activitiesByDays = {};
 
-    activities.forEach(activity => {
-        // Convert the date to a string in the format 'yyyy-mm-dd'
-        const date = new Date(activity.date).toISOString().split('T')[0];
-
-        // If this date is not already a key in the object, add it with an empty array as its value
-        if (!activitiesByDays[date]) {
-            activitiesByDays[date] = [];
+        // Initialize activitiesByDays with an empty array for each day
+        const start = dayjs(startDate);
+        const end = dayjs(endDate);
+        for (let day = start; day.isBefore(end) || day.isSame(end); day = day.add(1, 'day')) {
+            const index = day.diff(start, 'day');
+            activitiesByDays[index] = [];
         }
 
-        // Add the activity to the array for this date
-        activitiesByDays[date].push(activity);
-    });
+        activities.forEach(activity => {
+            const date = dayjs(activity.date);
+            const day = date.diff(start, 'day');
+            console.log(date);
+            console.log(start);
+            console.log(day);
 
-    // Convert the object to an array of arrays
-    const activitiesByDaysArray = Object.values(activitiesByDays);
+            // Add the activity to the array for this date
+            if (activitiesByDays[day]) {
+                activitiesByDays[day].push(activity);
+            }
+            
+        });
 
-    return activitiesByDaysArray;
-}
+        // Convert the object to an array of arrays
+        const activitiesByDaysArray = Object.values(activitiesByDays);
+
+        return activitiesByDaysArray;
+    }
 
     return (
         <div className="home_page">
@@ -155,15 +171,16 @@ const ItineraryDetails = () => {
             </div>
             <div className="itinerarydetails">
                 <h3>{itineraryTitle}</h3>
-                    <IconButton>
-                        <Link to={`/itineraries/${itineraryId}/add-activity`}> 
-                            <AddCircleIcon fontSize="large" sx={{color:"#008000"}}/>
-                        </Link>
-                    </IconButton>
+                <IconButton>
+                    <Link to={`/itineraries/${itineraryId}/add-activity`}> 
+                        <AddCircleIcon fontSize="large" sx={{color:"#008000"}}/>
+                    </Link>
+                </IconButton>
+                <text>{itineraryStartDate} - {itineraryEndDate}</text>
             </div>
         
             <Box className="itinerarydetails" sx={{m: 2, width: "50rem"}}>
-                {sortActivitiesByDays(activities).map((activitiesForOneDay, index) => (
+                {sortActivitiesByDays(activities, itineraryStartDate, itineraryEndDate).map((activitiesForOneDay, index) => (
                     <div key={index}>
                     <h4>Day {index + 1}</h4>
                     {activitiesForOneDay.map(activity => (
