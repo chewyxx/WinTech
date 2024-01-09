@@ -7,7 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import "../Styles/ItineraryCard.css";
+import "../Styles/ActivityCard.css";
 import { Link } from 'react-router-dom';
 
 export default function ActivityCard({ activity, handleDeleteActivity }) {
@@ -81,9 +81,8 @@ export default function ActivityCard({ activity, handleDeleteActivity }) {
 
                 <Typography component="div" variant="h5" sx = {{mt: -4, fontWeight: 'bold'}} color="#026670">
                     {activity.title}
-                    <Link to={activity.link} target='_blank'>
-                        <OpenInNewIcon sx = {{mb: -0.5, ml: 0.5, mr: 0.8}}/>
-                        {activity.link}
+                    <Link to={activity.link} target='_blank' >
+                        <OpenInNewIcon sx = {{mb: -0.5, ml: 0.5, mr: 0.8, color:'#026670'}} />
                     </Link>
                 </Typography>
                 
@@ -93,13 +92,20 @@ export default function ActivityCard({ activity, handleDeleteActivity }) {
                     Note: {activity.remark} 
                 </Typography>
             </CardContent>
-            <Box sx={{ display: 'flex', ml: 1, mb: 1 }}>
+            <Box sx={{ display: 'flex', ml: 1, mb: 1, fontSize:16 }}>
                 <Typography>
                     <PlaceIcon sx = {{mr: 0.3, mb: -0.7, ml: 0.4}}/>
-                    {activity.address}
+                    {activity.address.substring(0, 60)}
+                    {activity.address.length > 60 && '...'}
                     
-                    <AccessTimeFilledIcon sx = {{mr: 0.3, mb: -0.7, ml: 3}}/>
-                    {activity.openingHours}
+                    
+                </Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', ml: 1, mb: 1, fontSize:16 }}>
+                <Typography>
+                    <AccessTimeFilledIcon sx = {{mr: 0.3, mb: -0.7, ml: 0.4}}/>
+                        {activity.openingHours}
                 </Typography>
             </Box>
         </Box>
