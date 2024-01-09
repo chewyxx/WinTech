@@ -1,0 +1,147 @@
+.create_activity_page {
+    height: 100vh;
+    width: 100vw;
+    font-size: 3rem;
+    flex-direction: column;
+    gap: 1rem;
+    color: #000000;
+}
+    
+.create_activity_page span {
+    color: #024349
+}
+    
+.create_activity_page button:hover {
+    background-color: rgba(0, 212, 255, 1);
+}
+    
+@media only screen and (max-width: 1200px){
+    .create_activity_page{
+      font-size: 1.5rem;
+    }
+
+    .create_activity_page button {
+      margin: 0.6rem 1rem;
+      font-size: 1.5rem;
+    }
+}
+
+.create_activity_header {
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.create_activity_header h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color:#024349;
+}
+
+.create_activity_header h2 {
+  font-size: 2rem;
+  font-weight: normal;
+  color: #5d8588;
+  margin-bottom: 2rem;
+}
+
+.create_activity_form {
+  display: flex;
+  justify-content: center;
+  font-size: 3rem;
+  gap: 1rem;
+  flex-direction: column;
+  margin-left: 4rem;
+}
+
+.field_info_container {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.field_info_container input .invalid {
+  border: 1px solid red !important;
+}
+
+.field_info_container input {
+  width: 70%;
+  height: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: normal;
+  font-size: 1.5rem;
+  align-items: center;
+  gap: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #C9E0E7;
+}
+
+.field_info_container label {
+  width: 10vw;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  color:#000000;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.create_activity_buttons {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.create_activity_buttons button:hover {
+  background-color: #FEF9C7;
+  color: #A98D2B;
+}
+
+.save_button {
+  width: 15%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 2rem;
+  background-color: #9FEDD7;
+  color: #026670;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  margin-bottom: 2rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.525rem;
+}
+
+.cancel_button {
+  width: 15%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 2rem;
+  background-color: #edbd9f;
+  color: #026670;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  padding-top: 0.25rem;
+  padding-bottom: 0.525rem;
+  margin-bottom: 2rem;
+}
+
+.toast_container {
+  margin: 2rem;
+  font-size: 1rem;
+}

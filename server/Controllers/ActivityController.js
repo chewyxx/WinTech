@@ -4,7 +4,7 @@ const Activity = require("../Models/ActivityModel");
 // create activity
 module.exports.createActivity = async (req, res) => {
     const itineraryId = req.params.itineraryId;
-    const { title, link, address, openingHours, remark } = req.body;
+    const { title, link, address, openingHours, remark, date } = req.body;
 
     try {
         if (!title) {
@@ -21,6 +21,7 @@ module.exports.createActivity = async (req, res) => {
             address: address,
             openingHours: openingHours,
             remark: remark,
+            date: date,
         });
 
         await Itinerary.findByIdAndUpdate(itineraryId, {

@@ -23,6 +23,10 @@ const activitySchema = new mongoose.Schema(
         },
         remark: {
             type: String,
+        },
+        date: {
+            type: Date,
+            required: true,
         }
     }, {
         timestamps: true,
