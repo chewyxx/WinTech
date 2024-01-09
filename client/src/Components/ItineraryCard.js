@@ -13,8 +13,10 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 export default function ItineraryCard({ itinerary, username, handleDeleteItinerary }) {
+    console.log(itinerary.cities);
     const [anchorElItinerary, setAnchorElItinerary] = useState(null);
     const settings = ['Edit','Delete'];
+  
     const startDate = moment(new Date(itinerary.startDate).toLocaleDateString()).format("DD/MM/YYYY");
     const endDate = moment(new Date(itinerary.endDate).toLocaleDateString()).format("DD/MM/YYYY");
     const diffTime = Math.abs(new Date(itinerary.endDate) - new Date(itinerary.startDate) + 1);
@@ -101,7 +103,7 @@ export default function ItineraryCard({ itinerary, username, handleDeleteItinera
                     {itinerary.country}
                     
                     <LocationCityIcon sx = {{mr: 0.2, mb: -0.3, ml: 3}}/>
-                    {itinerary.cities}
+                    {itinerary.cities.join(", ")}
 
                     <Typography display="block" sx = {{mt: 1}}>
                     <PersonIcon sx = {{mr: 0.2, mb: -0.3}}/>
